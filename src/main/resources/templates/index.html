@@ -22,6 +22,16 @@
 
 <!-- Main -->
 <main class="container">
+    <section id="auth">
+        <div th:if="${authenticated}">
+            <p>[[${'Hello ' + displayName}]]</p>
+            <a class="contrast" href="/logout">Sign out</a>
+        </div>
+        <div th:unless="${authenticated}">
+            <p>not signed in</p>
+            <a class="contrast" href="/oauth2/authorization/google">Sign in with Google</a>
+        </div>
+    </section>
     <!-- Preview -->
     <section id="preview">
         <h2>Some sub Title</h2>

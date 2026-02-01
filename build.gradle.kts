@@ -31,8 +31,12 @@ dependencies {
 	implementation(libs.spring.boot.starter.actuator)
 	implementation(libs.spring.boot.starter.webmvc)
 	implementation(libs.spring.boot.starter.thymeleaf)
+	implementation(libs.spring.boot.starter.security)
+	implementation(libs.spring.boot.starter.oauth2.client)
 	implementation(libs.htmx.webjars)
-	//implementation(org.webjars.npm:htmx.org)
+
+	testImplementation("org.mockito:mockito-core")
+	testImplementation("org.springframework.security:spring-security-test")
 
 	testImplementation(libs.spring.boot.starter.actuator.test)
 	testImplementation(libs.spring.boot.starter.webmvc.test)
