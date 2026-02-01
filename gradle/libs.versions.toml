@@ -1,0 +1,16 @@
+[versions]
+spring-boot = "4.0.2"
+htmx-webjars = "2.0.8"
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+
+[libraries]
+spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+spring-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+spring-boot-starter-webmvc = { group = "org.springframework.boot", name = "spring-boot-starter-webmvc" }
+spring-boot-starter-thymeleaf = { group = "org.springframework.boot", name = "spring-boot-starter-thymeleaf" }
+spring-boot-starter-actuator-test = { group = "org.springframework.boot", name = "spring-boot-starter-actuator-test" }
+spring-boot-starter-webmvc-test = { group = "org.springframework.boot", name = "spring-boot-starter-webmvc-test" }
+htmx-webjars = { group = 'org.webjars.npm', name = 'htmx.org', version.ref="htmx-webjars"}
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }

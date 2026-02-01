@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: google-drive-organizer
+
+server:
+  port : 8081
