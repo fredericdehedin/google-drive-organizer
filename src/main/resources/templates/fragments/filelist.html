@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="filelist">
+    <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
+        <ul>
+            <li th:each="file : ${driveFiles}" th:text="${file.name()}"></li>
+        </ul>
+    </div>
+    <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
+        <p>No files found in the configured folder.</p>
+    </div>
+</div>
+</body>
+</html>
