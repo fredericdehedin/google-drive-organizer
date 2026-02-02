@@ -1,6 +1,9 @@
 [versions]
 spring-boot = "4.0.2"
 htmx-webjars = "2.0.8"
+google-api-client = "2.8.1"
+google-oauth-client = "1.36.0"
+google-drive = "v3-rev197-1.25.0"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -14,5 +17,8 @@ spring-boot-starter-security = { group = "org.springframework.boot", name = "spr
 spring-boot-starter-oauth2-client = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
 spring-boot-starter-actuator-test = { group = "org.springframework.boot", name = "spring-boot-starter-actuator-test" }
 spring-boot-starter-webmvc-test = { group = "org.springframework.boot", name = "spring-boot-starter-webmvc-test" }
-htmx-webjars = { group = 'org.webjars.npm', name = 'htmx.org', version.ref="htmx-webjars"}
+google-api-client = { group = "com.google.api-client", name = "google-api-client", version.ref = "google-api-client" }
+google-oauth-client = { group = "com.google.oauth-client", name = "google-oauth-client", version.ref = "google-oauth-client" }
+google-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "google-drive" }
+htmx-webjars = { group = "org.webjars.npm", name = "htmx.org", version.ref = "htmx-webjars" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }

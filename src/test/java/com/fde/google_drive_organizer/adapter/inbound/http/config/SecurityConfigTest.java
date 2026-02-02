@@ -1,4 +1,4 @@
-package com.fde.google_drive_organizer.adapter.inbound.http;
+package com.fde.google_drive_organizer.adapter.inbound.http.config;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

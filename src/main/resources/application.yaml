@@ -9,10 +9,14 @@ spring:
             client-id: ${GOOGLE_OAUTH_CLIENT_ID}
             client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
             scope:
-              - openid
-              - profile
-              - email
+            - openid
+            - profile
+            - email
+            - https://www.googleapis.com/auth/drive
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+drive:
+  check-in-folder-id: ${GOOGLE_DRIVE_FOLDER_ID}
 
 server:
   port : 8081

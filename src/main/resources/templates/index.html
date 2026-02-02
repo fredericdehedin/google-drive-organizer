@@ -33,13 +33,16 @@
         </div>
     </section>
     <!-- Preview -->
-    <section id="preview">
-        <h2>Some sub Title</h2>
-        <p>
-            Sed ultricies dolor non ante vulputate hendrerit. Vivamus sit amet suscipit sapien. Nulla
-            iaculis eros a elit pharetra egestas.
-        </p>
-
+    <section id="preview" th:if="${authenticated}">
+        <h2>Google Drive Files</h2>
+        <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
+            <ul>
+                <li th:each="file : ${driveFiles}" th:text="${file.name()}"></li>
+            </ul>
+        </div>
+        <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
+            <p>No files found in the configured folder.</p>
+        </div>
     </section>
     <!-- ./ Preview -->
 </main>
