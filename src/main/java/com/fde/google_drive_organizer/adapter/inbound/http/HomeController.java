@@ -29,23 +29,14 @@ public class HomeController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal OAuth2User user, Model model) {
         if (user != null) {
-            Map<String, Object> attributes = user.getAttributes();
-            String displayName = (String) attributes.getOrDefault("name", attributes.get("given_name"));
-            if (displayName == null || displayName.isBlank()) {
-                displayName = user.getName();
-            }
-            model.addAttribute("displayName", displayName);
-            model.addAttribute("authenticated", true);
-
             try {
                 List<DriveFile> files = listDriveFilesUseCase.execute();
                 model.addAttribute(DRIVE_FILES, files);
             } catch (IllegalStateException e) {
-                log.warn("Failed to retrieve drive files for user {}: {}", displayName, e.getMessage());
+                log.warn("Failed to retrieve drive files: {}", e.getMessage());
                 model.addAttribute(DRIVE_FILES, Collections.emptyList());
             }
         } else {
-            model.addAttribute("authenticated", false);
             model.addAttribute(DRIVE_FILES, Collections.emptyList());
         }
 

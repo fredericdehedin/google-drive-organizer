@@ -1,39 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sample spring with HTMX</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" >
+    <title>Google Drive Organizer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <script src="/webjars/htmx.org/2.0.8/dist/htmx.min.js"></script>
     <script>
         htmx.logAll();
     </script>
 </head>
 <body>
+<!-- Navigation Bar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
 <!-- Header -->
 <header class="container">
     <hgroup>
-        <h1>Basic template</h1>
+        <h1>Google Drive Organizer</h1>
         <p th:text="${message}">Hello HTMX</p>
     </hgroup>
-
 </header>
 <!-- ./ Header -->
 
 <!-- Main -->
 <main class="container">
-    <section id="auth">
-        <div th:if="${authenticated}">
-            <p>[[${'Hello ' + displayName}]]</p>
-            <a class="contrast" href="/logout">Sign out</a>
-        </div>
-        <div th:unless="${authenticated}">
-            <p>not signed in</p>
-            <a class="contrast" href="/oauth2/authorization/google">Sign in with Google</a>
-        </div>
-    </section>
-    <!-- Preview -->
-    <section id="preview" th:if="${authenticated}">
+    <!-- Google Drive Files Section -->
+    <section id="preview" th:if="${navAuthenticated}">
         <h2>Google Drive Files</h2>
         <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
             <ul>
@@ -44,7 +36,7 @@
             <p>No files found in the configured folder.</p>
         </div>
     </section>
-    <!-- ./ Preview -->
+    <!-- ./ Google Drive Files Section -->
 </main>
 </body>
 </html>
