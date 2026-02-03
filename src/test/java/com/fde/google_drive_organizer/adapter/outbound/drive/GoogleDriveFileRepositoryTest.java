@@ -21,7 +21,8 @@ class GoogleDriveFileRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new GoogleDriveFileRepository(accessTokenProvider, CHECK_IN_FOLDER_ID);
+        DriveConfig config = new DriveConfig(CHECK_IN_FOLDER_ID);
+        repository = new GoogleDriveFileRepository(accessTokenProvider, config);
     }
 
     @Test

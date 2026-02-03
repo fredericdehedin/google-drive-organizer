@@ -8,7 +8,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -23,13 +22,13 @@ public class GoogleDriveFileRepository implements FileRepository {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     private final AccessTokenProvider accessTokenProvider;
-    private final String checkInFolderId;
+    private final DriveConfig driveConfig;
 
     public GoogleDriveFileRepository(
             AccessTokenProvider accessTokenProvider,
-            @Value("${drive.check-in-folder-id}") String checkInFolderId) {
+            DriveConfig driveConfig) {
         this.accessTokenProvider = accessTokenProvider;
-        this.checkInFolderId = checkInFolderId;
+        this.driveConfig = driveConfig;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class GoogleDriveFileRepository implements FileRepository {
             Drive driveService = buildDriveService(accessToken);
             
             FileList result = driveService.files().list()
-                    .setQ("'" + checkInFolderId + "' in parents and trashed=false")
+                    .setQ("'" + driveConfig.checkInFolderId() + "' in parents and trashed=false")
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
                     .setPageSize(10)
                     .execute();
