@@ -45,8 +45,8 @@ public class GoogleDriveFileRepository implements FileRepository {
             
             FileList result = driveService.files().list()
                     .setQ("'" + checkInFolderId + "' in parents and trashed=false")
-                    .setFields("files(id, name)")
-                    .setPageSize(100)
+                    .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
+                    .setPageSize(10)
                     .execute();
 
             if (result.getFiles() == null || result.getFiles().isEmpty()) {
@@ -54,7 +54,13 @@ public class GoogleDriveFileRepository implements FileRepository {
             }
 
             return result.getFiles().stream()
-                    .map(file -> new DriveFile(file.getId(), file.getName()))
+                    .map(file -> new DriveFile(
+                            file.getId(),
+                            file.getName(),
+                            file.getMimeType(),
+                            file.getIconLink(),
+                            file.getThumbnailLink()
+                    ))
                     .toList();
 
         } catch (IOException | GeneralSecurityException e) {

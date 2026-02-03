@@ -1,6 +1,12 @@
 package com.fde.google_drive_organizer.domain.model;
 
-public record DriveFile(String id, String name) {
+public record DriveFile(
+    String id,
+    String name,
+    String mimeType,
+    String iconLink,
+    String thumbnailLink
+) {
     
     public DriveFile {
         if (id == null || id.isBlank()) {

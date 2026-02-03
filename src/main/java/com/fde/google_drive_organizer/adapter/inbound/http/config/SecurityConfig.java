@@ -9,15 +9,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
                 .authorizeHttpRequests(authorize -> authorize
+                        // Public resources
                         .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/resources/**").permitAll()
+                        // API endpoints require authentication
+                        .requestMatchers("/api/**").authenticated()
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", true))
-                .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
-
-        return http.build();
+                .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
+                .build();
     }
 }

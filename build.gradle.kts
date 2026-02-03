@@ -36,11 +36,10 @@ dependencies {
     implementation(libs.htmx.webjars)
     implementation(libs.google.drive)
 
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.springframework.security:spring-security-test")
-
-    testImplementation(libs.spring.boot.starter.actuator.test)
-    testImplementation(libs.spring.boot.starter.webmvc.test)
+    testImplementation(platform(libs.spring.boot.bom))
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

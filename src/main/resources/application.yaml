@@ -18,5 +18,9 @@ spring:
 drive:
   check-in-folder-id: ${GOOGLE_DRIVE_FOLDER_ID}
 
+thumbnail:
+  cache:
+    directory: ${THUMBNAIL_CACHE_DIR:./cache/thumbnails}
+
 server:
   port : 8081

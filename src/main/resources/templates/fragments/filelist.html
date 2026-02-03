@@ -3,9 +3,33 @@
 <body>
 <div th:fragment="filelist">
     <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
-        <ul>
-            <li th:each="file : ${driveFiles}" th:text="${file.name()}"></li>
-        </ul>
+        <div class="file-grid">
+            <article class="file-card" th:each="file : ${driveFiles}">
+                <header class="file-card-header">
+                    <img th:src="${file.iconLink()}"
+                         th:alt="'Icon for ' + ${file.name()}"
+                         class="file-icon"
+                         th:if="${file.iconLink() != null}">
+                    <span class="file-name" th:text="${file.name()}">File Name</span>
+                </header>
+                <div class="file-preview">
+                    <img th:if="${file.thumbnailLink() != null}"
+                         th:src="@{/api/thumbnails/{fileId}(fileId=${file.id()})}"
+                         th:alt="'Thumbnail for ' + ${file.name()}"
+                         class="file-thumbnail"
+                         loading="lazy">
+                    <img th:if="${file.thumbnailLink() == null and file.iconLink() != null}"
+                         th:src="${file.iconLink()}"
+                         th:alt="'Icon for ' + ${file.name()}"
+                         class="file-icon-large">
+                </div>
+                <footer class="file-card-footer">
+                    <button type="button" class="archive-button">
+                        Archive
+                    </button>
+                </footer>
+            </article>
+        </div>
     </div>
     <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
         <p>No files found in the configured folder.</p>
