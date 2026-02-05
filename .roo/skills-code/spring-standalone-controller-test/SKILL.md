@@ -38,32 +38,28 @@ private final MockMvc mockMvc = MockMvcBuilders
         .build();
 ```
 
-Dependencies must be passed via constructor
+- Dependencies must be passed via constructor
+- No field injection
 
-No field injection
-
-3. Authentication
+### 3. Authentication
 
 If endpoint requires authentication:
 
-Use @WithMockUser
+- Use `@WithMockUser`
+- Do NOT configure full security context
+- Do NOT load security configuration
 
-Do NOT configure full security context
-
-Do NOT load security configuration
-
-4. Test Structure
+### 4. Test Structure
 
 Each endpoint must have:
 
-Success case
-
-Not-found case (if applicable)
-
-Error case (if applicable)
+- Success case
+- Not-found case (if applicable)
+- Error case (if applicable)
 
 Example pattern:
 
+```java
 @Test
 @WithMockUser
 void shouldReturnResourceWhenFoundAndAuthenticated() throws Exception {
@@ -74,45 +70,38 @@ void shouldReturnResourceWhenFoundAndAuthenticated() throws Exception {
             .andExpect(content().contentType(...))
             .andExpect(content().bytes(...));
 }
+```
 
-Assertions
+### 5. Assertions
 
 Tests must verify:
 
-HTTP status
-
-Content type (if applicable)
-
-Response body
-
-Relevant headers (if applicable)
+- HTTP status
+- Content type (if applicable)
+- Response body
+- Relevant headers (if applicable)
 
 Avoid minimal assertions like only checking status.
 
-Anti-Patterns (Forbidden)
+---
 
-@SpringBootTest
+## Anti-Patterns (Forbidden)
 
-@WebMvcTest
+- `@SpringBootTest`
+- `@WebMvcTest`
+- Loading application context
+- Using real beans
+- Using `@MockBean`
+- Injecting via `@Autowired`
+- Mixing integration-style testing with unit-style controller tests
 
-Loading application context
+---
 
-Using real beans
-
-Using @MockBean
-
-Injecting via @Autowired
-
-Mixing integration-style testing with unit-style controller tests
-
-Goal
+## Goal
 
 Controller tests must:
 
-Be fast
-
-Be isolated
-
-Mock all dependencies
-
-Test only HTTP contract and controller behavior
+- Be fast
+- Be isolated
+- Mock all dependencies
+- Test only HTTP contract and controller behavior

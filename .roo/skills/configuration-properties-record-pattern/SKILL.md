@@ -9,7 +9,7 @@ This skill enforces the following conventions when creating configuration proper
 
 ---
 
-## 1️. Configuration Properties Class
+## 1. Configuration Properties Class
 
 - Use **records** for immutable configuration properties.
 - Use **`@ConfigurationProperties(prefix = "...")`** for binding.
@@ -28,23 +28,26 @@ public record ThumbnailCacheConfig(
         @DefaultValue("/tmp/cache") String directory
 ) {}
 ```
+
 Property binding:
 
-thumbnail.cache.directory → directory field
+- `thumbnail.cache.directory` → `directory` field
+- Default value is applied if property is missing
 
-Default value is applied if property is missing
+---
 
 ## 2. Testing Configuration Properties
-Do not use @SpringBootTest
 
-+ Use @ExtendWith(SpringExtension.class)
-+ Use @ContextConfiguration(classes = TestConfig.class)
-+ Use @EnableConfigurationProperties(...) for the config class
-+ Use @TestPropertySource(properties = {...}) to inject test values
+Do not use `@SpringBootTest`
 
-Autowire the configuration properties record in the test
+- Use `@ExtendWith(SpringExtension.class)`
+- Use `@ContextConfiguration(classes = TestConfig.class)`
+- Use `@EnableConfigurationProperties(...)` for the config class
+- Use `@TestPropertySource(properties = {...})` to inject test values
+- Autowire the configuration properties record in the test
 
 Example Test:
+
 ```java
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,9 +78,12 @@ class ThumbnailCacheConfigTest {
     }
 }
 ```
-+ Lightweight and isolated test
-+ Works in multi-module Gradle setups
-+ Verifies property binding and defaults
+
+- Lightweight and isolated test
+- Works in multi-module Gradle setups
+- Verifies property binding and defaults
+
+---
 
 ## 3. Usage in code
 
@@ -101,22 +107,31 @@ public class ThumbnailService {
 }
 ```
 
-## 4. Conventions & Best Practices
-+ Keep property keys consistent with prefix hierarchy
-+ Avoid @SpringBootTest in property tests → tests stay fast and isolated
-+ Favor primitive types like `boolean`, `int` etc. instead of boxed types
-+ For booleans: use `@DefaultValue` if `true` needs to be enforced (e.g. for feature flags)
-+ For multi-module projects, ensure the module with the record is a dependency of the module containing the test
-+ For multiple feature flags, repeat the same pattern for each record + test pair
+---
 
-## 4️⃣ Anti-Patterns (Do NOT)
-+ Mutable classes with @Data or @Setter for feature flags
-+ @SpringBootTest in simple property binding tests
-+ Hard-coded property values in production code instead of config binding
-+ Skipping @TestPropertySource or @DefaultValue → may cause NPEs in tests
+## 4. Conventions & Best Practices
+
+- Keep property keys consistent with prefix hierarchy
+- Avoid `@SpringBootTest` in property tests → tests stay fast and isolated
+- Favor primitive types like `boolean`, `int` etc. instead of boxed types
+- For booleans: use `@DefaultValue` if `true` needs to be enforced (e.g. for feature flags)
+- For multi-module projects, ensure the module with the record is a dependency of the module containing the test
+- For multiple feature flags, repeat the same pattern for each record + test pair
+
+---
+
+## Anti-Patterns (Do NOT)
+
+- Mutable classes with `@Data` or `@Setter` for feature flags
+- `@SpringBootTest` in simple property binding tests
+- Hard-coded property values in production code instead of config binding
+- Skipping `@TestPropertySource` or `@DefaultValue` → may cause NPEs in tests
+
+---
 
 ## Goal
-+ Enforce project-wide immutable configuration properties
-+ Ensure defaults are applied safely
-+ Provide fast, deterministic tests for properties
-+ Reduce boilerplate and mistakes in multi-module setups
+
+- Enforce project-wide immutable configuration properties
+- Ensure defaults are applied safely
+- Provide fast, deterministic tests for properties
+- Reduce boilerplate and mistakes in multi-module setups
