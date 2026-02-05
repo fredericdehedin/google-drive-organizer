@@ -13,8 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ThumbnailCacheConfigTest.TestConfig.class)
 @TestPropertySource(properties = {
-        "thumbnail.cache.directory=/tmp/test-cache",
-        "thumbnail.cache.cache-thumbnails-inactive=false"
+        "thumbnail.cache.directory=/tmp/test-cache"
 })
 class ThumbnailCacheConfigTest {
 
@@ -27,10 +26,5 @@ class ThumbnailCacheConfigTest {
     @Test
     void shouldBindDirectoryProperty() {
         assertThat(config.directory()).isEqualTo("/tmp/test-cache");
-    }
-
-    @Test
-    void shouldBindCacheThumbnailsInactiveProperty() {
-        assertThat(config.cacheThumbnailsInactive()).isFalse();
     }
 }

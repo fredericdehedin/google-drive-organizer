@@ -1,7 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.adapter.outbound.cache.DiskThumbnailCache;
-import com.fde.google_drive_organizer.adapter.outbound.cache.ThumbnailCacheConfig;
 import com.fde.google_drive_organizer.domain.port.outbound.ThumbnailRepository;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -27,21 +26,17 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
 
     private final DiskThumbnailCache cache;
     private final AccessTokenProvider accessTokenProvider;
-    private final ThumbnailCacheConfig cacheConfig;
 
-    public GoogleDriveThumbnailRepository(DiskThumbnailCache cache, AccessTokenProvider accessTokenProvider, ThumbnailCacheConfig cacheConfig) {
+    public GoogleDriveThumbnailRepository(DiskThumbnailCache cache, AccessTokenProvider accessTokenProvider) {
         this.cache = cache;
         this.accessTokenProvider = accessTokenProvider;
-        this.cacheConfig = cacheConfig;
     }
 
     @Override
     public Optional<byte[]> getThumbnail(String fileId) {
-        if (!cacheConfig.cacheThumbnailsInactive()) {
-            Optional<byte[]> cachedThumbnail = cache.get(fileId);
-            if (cachedThumbnail.isPresent()) {
-                return cachedThumbnail;
-            }
+        Optional<byte[]> cachedThumbnail = cache.get(fileId);
+        if (cachedThumbnail.isPresent()) {
+            return cachedThumbnail;
         }
 
         return fetchFromGoogleDrive(fileId);
@@ -65,12 +60,8 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
 
             // Download the thumbnail image from the URL
             byte[] thumbnailData = downloadThumbnailFromUrl(thumbnailLink, accessToken);
-            if (!cacheConfig.cacheThumbnailsInactive()) {
-                cache.put(fileId, thumbnailData);
-                log.debug("Fetched and cached thumbnail for fileId: {}", fileId);
-            } else {
-                log.debug("Fetched thumbnail for fileId: {} (caching disabled)", fileId);
-            }
+            cache.put(fileId, thumbnailData);
+            log.debug("Fetched and cached thumbnail for fileId: {}", fileId);
             return Optional.of(thumbnailData);
 
         } catch (IOException | GeneralSecurityException e) {

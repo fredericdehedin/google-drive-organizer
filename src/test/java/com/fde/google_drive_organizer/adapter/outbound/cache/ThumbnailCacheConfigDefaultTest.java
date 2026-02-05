@@ -23,9 +23,4 @@ class ThumbnailCacheConfigDefaultTest {
     void shouldUseDefaultDirectory() {
         assertThat(config.directory()).isEqualTo("./cache/thumbnails");
     }
-
-    @Test
-    void shouldDefaultCacheThumbnailsInactiveToTrue() {
-        assertThat(config.cacheThumbnailsInactive()).isTrue();
-    }
 }

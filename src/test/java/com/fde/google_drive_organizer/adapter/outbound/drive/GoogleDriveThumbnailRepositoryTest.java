@@ -1,7 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.adapter.outbound.cache.DiskThumbnailCache;
-import com.fde.google_drive_organizer.adapter.outbound.cache.ThumbnailCacheConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,12 +25,11 @@ class GoogleDriveThumbnailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ThumbnailCacheConfig cacheConfig = new ThumbnailCacheConfig("./cache/thumbnails", false);
-        repository = new GoogleDriveThumbnailRepository(cache, accessTokenProvider, cacheConfig);
+        repository = new GoogleDriveThumbnailRepository(cache, accessTokenProvider);
     }
 
     @Test
-    void shouldCheckCacheWhenCachingIsActive() {
+    void shouldCheckCacheForThumbnail() {
         String fileId = "test-file-id";
         byte[] cachedData = new byte[]{1, 2, 3};
         when(cache.get(fileId)).thenReturn(Optional.of(cachedData));
@@ -42,28 +40,5 @@ class GoogleDriveThumbnailRepositoryTest {
         assertThat(result.get()).isEqualTo(cachedData);
         verify(cache).get(fileId);
         verifyNoInteractions(accessTokenProvider);
-    }
-
-    @Test
-    void shouldSkipCacheCheckWhenCachingIsInactive() {
-        ThumbnailCacheConfig inactiveConfig = new ThumbnailCacheConfig("./cache/thumbnails", true);
-        repository = new GoogleDriveThumbnailRepository(cache, accessTokenProvider, inactiveConfig);
-        String fileId = "test-file-id";
-
-        Optional<byte[]> result = repository.getThumbnail(fileId);
-
-        assertThat(result).isEmpty();
-        verify(cache, never()).get(fileId);
-    }
-
-    @Test
-    void shouldNotWriteToCacheWhenCachingIsInactive() {
-        ThumbnailCacheConfig inactiveConfig = new ThumbnailCacheConfig("./cache/thumbnails", true);
-        repository = new GoogleDriveThumbnailRepository(cache, accessTokenProvider, inactiveConfig);
-        String fileId = "test-file-id";
-
-        repository.getThumbnail(fileId);
-
-        verify(cache, never()).put(any(), any());
     }
 }
