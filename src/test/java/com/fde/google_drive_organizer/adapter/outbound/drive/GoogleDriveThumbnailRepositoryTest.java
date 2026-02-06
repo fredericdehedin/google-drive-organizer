@@ -1,22 +1,17 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.adapter.outbound.cache.DiskThumbnailCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GoogleDriveThumbnailRepositoryTest {
-
-    @Mock
-    private DiskThumbnailCache cache;
 
     @Mock
     private AccessTokenProvider accessTokenProvider;
@@ -25,20 +20,24 @@ class GoogleDriveThumbnailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new GoogleDriveThumbnailRepository(cache, accessTokenProvider);
+        repository = new GoogleDriveThumbnailRepository(accessTokenProvider);
     }
 
     @Test
-    void shouldCheckCacheForThumbnail() {
-        String fileId = "test-file-id";
-        byte[] cachedData = new byte[]{1, 2, 3};
-        when(cache.get(fileId)).thenReturn(Optional.of(cachedData));
+    void shouldReturnNullWhenAccessTokenProviderReturnsNull() {
+        when(accessTokenProvider.getAccessToken()).thenReturn(null);
 
-        Optional<byte[]> result = repository.getThumbnail(fileId);
+        byte[] result = repository.getThumbnail("test-file-id");
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(cachedData);
-        verify(cache).get(fileId);
-        verifyNoInteractions(accessTokenProvider);
+        assertThat(result).isNull();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAccessTokenProviderThrowsException() {
+        when(accessTokenProvider.getAccessToken()).thenThrow(new RuntimeException("Token error"));
+
+        assertThatThrownBy(() -> repository.getThumbnail("test-file-id"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Token error");
     }
 }

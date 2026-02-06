@@ -1,6 +1,5 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.adapter.outbound.cache.DiskThumbnailCache;
 import com.fde.google_drive_organizer.domain.port.outbound.ThumbnailRepository;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -9,7 +8,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,56 +16,48 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Optional;
 
-@Component
+@Repository
 public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
 
     private static final Logger log = LoggerFactory.getLogger(GoogleDriveThumbnailRepository.class);
 
-    private final DiskThumbnailCache cache;
     private final AccessTokenProvider accessTokenProvider;
 
-    public GoogleDriveThumbnailRepository(DiskThumbnailCache cache, AccessTokenProvider accessTokenProvider) {
-        this.cache = cache;
+    public GoogleDriveThumbnailRepository(AccessTokenProvider accessTokenProvider) {
         this.accessTokenProvider = accessTokenProvider;
     }
 
     @Override
-    public Optional<byte[]> getThumbnail(String fileId) {
-        Optional<byte[]> cachedThumbnail = cache.get(fileId);
-        if (cachedThumbnail.isPresent()) {
-            return cachedThumbnail;
-        }
-
-        return fetchFromGoogleDrive(fileId);
-    }
-
-    private Optional<byte[]> fetchFromGoogleDrive(String fileId) {
+    public byte[] getThumbnail(String fileId) {
         try {
             String accessToken = accessTokenProvider.getAccessToken();
+            if (accessToken == null) {
+                //TODO: throw no access exception
+                log.debug("No access token available for fileId: {}", fileId);
+                return null;
+            }
+            
             Drive driveService = buildDriveService(accessToken);
 
-            // First, get the file metadata to retrieve the thumbnailLink
             File file = driveService.files().get(fileId)
                     .setFields("thumbnailLink")
                     .execute();
 
             String thumbnailLink = file.getThumbnailLink();
             if (thumbnailLink == null || thumbnailLink.isEmpty()) {
+                //TODO: throw not found exception
                 log.debug("No thumbnail available for fileId: {}", fileId);
-                return Optional.empty();
+                return null;
             }
 
-            // Download the thumbnail image from the URL
             byte[] thumbnailData = downloadThumbnailFromUrl(thumbnailLink, accessToken);
-            cache.put(fileId, thumbnailData);
-            log.debug("Fetched and cached thumbnail for fileId: {}", fileId);
-            return Optional.of(thumbnailData);
+            log.debug("Fetched thumbnail for fileId: {}", fileId);
+            return thumbnailData;
 
         } catch (IOException | GeneralSecurityException e) {
-            log.error("Failed to fetch thumbnail from Google Drive for fileId: {}", fileId, e);
-            return Optional.empty();
+            //TODO: throw explicit thumbnail exception
+            throw new RuntimeException("Failed to fetch thumbnail from Google Drive for fileId: " + fileId, e);
         }
     }
 
@@ -92,9 +83,8 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
     }
 
     private Drive buildDriveService(String accessToken) throws GeneralSecurityException, IOException {
-        HttpRequestInitializer requestInitializer = request -> {
-            request.getHeaders().setAuthorization("Bearer " + accessToken);
-        };
+        HttpRequestInitializer requestInitializer = request
+                -> request.getHeaders().setAuthorization("Bearer " + accessToken);
 
         return new Drive.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),

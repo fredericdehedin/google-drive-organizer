@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -24,13 +23,15 @@ public class ThumbnailController {
 
     @GetMapping("/{fileId}")
     public ResponseEntity<byte[]> getThumbnail(@PathVariable String fileId) {
-        Optional<byte[]> thumbnail = getThumbnailUC.execute(fileId);
+        byte[] thumbnail = getThumbnailUC.execute(fileId);
 
-        return thumbnail
-                .map(data -> ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic())
-                        .body(data))
-                .orElse(ResponseEntity.notFound().build());
+        if (thumbnail == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic())
+                .body(thumbnail);
     }
 }

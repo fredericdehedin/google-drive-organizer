@@ -7,8 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,23 +24,22 @@ class GetThumbnailUCTest {
     void shouldReturnThumbnailWhenFound() {
         String fileId = "test-file-id";
         byte[] expectedThumbnail = new byte[]{1, 2, 3};
-        when(thumbnailRepository.getThumbnail(fileId)).thenReturn(Optional.of(expectedThumbnail));
+        when(thumbnailRepository.getThumbnail(fileId)).thenReturn(expectedThumbnail);
 
-        Optional<byte[]> result = getThumbnailUC.execute(fileId);
+        byte[] result = getThumbnailUC.execute(fileId);
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(expectedThumbnail);
+        assertThat(result).isEqualTo(expectedThumbnail);
         verify(thumbnailRepository).getThumbnail(fileId);
     }
 
     @Test
-    void shouldReturnEmptyWhenThumbnailNotFound() {
+    void shouldReturnNullWhenThumbnailNotFound() {
         String fileId = "non-existent-file-id";
-        when(thumbnailRepository.getThumbnail(fileId)).thenReturn(Optional.empty());
+        when(thumbnailRepository.getThumbnail(fileId)).thenReturn(null);
 
-        Optional<byte[]> result = getThumbnailUC.execute(fileId);
+        byte[] result = getThumbnailUC.execute(fileId);
 
-        assertThat(result).isEmpty();
+        assertThat(result).isNull();
         verify(thumbnailRepository).getThumbnail(fileId);
     }
 }
