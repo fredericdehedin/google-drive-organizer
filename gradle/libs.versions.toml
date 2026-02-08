@@ -4,6 +4,7 @@ htmx-webjars = "2.0.8"
 google-api-client = "2.8.1"
 google-oauth-client = "1.36.0"
 google-drive = "v3-rev197-1.25.0"
+tika = "3.2.3"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -21,3 +22,5 @@ google-oauth-client = { group = "com.google.oauth-client", name = "google-oauth-
 google-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "google-drive" }
 htmx-webjars = { group = "org.webjars.npm", name = "htmx.org", version.ref = "htmx-webjars" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+tika-core = { group = "org.apache.tika", name = "tika-core", version.ref = "tika" }
+tika-parsers-standard = { group = "org.apache.tika", name = "tika-parsers-standard-package", version.ref = "tika" }

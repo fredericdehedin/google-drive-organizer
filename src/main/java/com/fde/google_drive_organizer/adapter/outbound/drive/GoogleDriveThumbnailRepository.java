@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.domain.port.outbound.ThumbnailRepository;
+import com.fde.google_drive_organizer.application.port.outbound.ThumbnailRepository;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;

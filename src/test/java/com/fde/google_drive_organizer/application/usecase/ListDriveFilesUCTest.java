@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.application.usecase;
 
 import com.fde.google_drive_organizer.domain.model.DriveFile;
-import com.fde.google_drive_organizer.domain.port.outbound.FileRepository;
+import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.cache;
 
-import com.fde.google_drive_organizer.domain.port.outbound.ThumbnailRepository;
+import com.fde.google_drive_organizer.application.port.outbound.ThumbnailRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;

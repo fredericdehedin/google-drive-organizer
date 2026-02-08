@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.domain.model.DriveFile;
-import com.fde.google_drive_organizer.domain.port.outbound.FileRepository;
+import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
@@ -45,7 +45,7 @@ public class GoogleDriveFileRepository implements FileRepository {
             FileList result = driveService.files().list()
                     .setQ("'" + driveConfig.checkInFolderId() + "' in parents and trashed=false")
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
-                    .setPageSize(10)
+                    .setPageSize(30)
                     .execute();
 
             if (result.getFiles() == null || result.getFiles().isEmpty()) {
@@ -68,9 +68,8 @@ public class GoogleDriveFileRepository implements FileRepository {
     }
 
     private Drive buildDriveService(String accessToken) throws GeneralSecurityException, IOException {
-        HttpRequestInitializer requestInitializer = request -> {
+        HttpRequestInitializer requestInitializer = request ->
             request.getHeaders().setAuthorization("Bearer " + accessToken);
-        };
 
         return new Drive.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),

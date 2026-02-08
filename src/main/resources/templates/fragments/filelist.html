@@ -24,7 +24,9 @@
                          class="file-icon-large">
                 </div>
                 <footer class="file-card-footer">
-                    <button type="button" class="archive-button">
+                    <button type="button" class="archive-button"
+                            th:data-file-id="${file.id()}"
+                            onclick="archiveFile(this.dataset.fileId)">
                         Archive
                     </button>
                 </footer>
@@ -34,6 +36,23 @@
     <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
         <p>No files found in the configured folder.</p>
     </div>
+    <script>
+        function archiveFile(fileId) {
+            fetch('/api/files/' + fileId + '/archive', {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Archive request successful for file: ' + fileId);
+                } else {
+                    console.error('Archive request failed for file: ' + fileId);
+                }
+            })
+            .catch(error => {
+                console.error('Error archiving file: ' + fileId, error);
+            });
+        }
+    </script>
 </div>
 </body>
 </html>

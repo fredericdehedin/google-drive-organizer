@@ -35,6 +35,8 @@ dependencies {
     implementation(libs.spring.boot.starter.oauth2.client)
     implementation(libs.htmx.webjars)
     implementation(libs.google.drive)
+    implementation(libs.tika.core)
+    implementation(libs.tika.parsers.standard)
 
     testImplementation(platform(libs.spring.boot.bom))
     testImplementation(libs.spring.boot.starter.test)
