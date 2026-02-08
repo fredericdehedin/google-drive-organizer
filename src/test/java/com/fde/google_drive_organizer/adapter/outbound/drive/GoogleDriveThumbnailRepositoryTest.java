@@ -1,17 +1,25 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
+import com.google.api.services.drive.Drive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GoogleDriveThumbnailRepositoryTest {
+
+    @Mock
+    private Drive drive;
 
     @Mock
     private AccessTokenProvider accessTokenProvider;
@@ -20,7 +28,7 @@ class GoogleDriveThumbnailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new GoogleDriveThumbnailRepository(accessTokenProvider);
+        repository = new GoogleDriveThumbnailRepository(drive, accessTokenProvider);
     }
 
     @Test
@@ -39,5 +47,23 @@ class GoogleDriveThumbnailRepositoryTest {
         assertThatThrownBy(() -> repository.getThumbnail("test-file-id"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Token error");
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionWhenDriveApiCallFails() throws IOException {
+        when(accessTokenProvider.getAccessToken()).thenReturn("valid-token");
+        
+        Drive.Files files = mock(Drive.Files.class);
+        Drive.Files.Get getRequest = mock(Drive.Files.Get.class);
+
+        when(drive.files()).thenReturn(files);
+        when(files.get(anyString())).thenReturn(getRequest);
+        when(getRequest.setFields(anyString())).thenReturn(getRequest);
+        when(getRequest.execute()).thenThrow(new IOException("API error"));
+
+        assertThatThrownBy(() -> repository.getThumbnail("test-file-id"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Failed to fetch thumbnail from Google Drive for fileId: test-file-id")
+                .hasCauseInstanceOf(IOException.class);
     }
 }

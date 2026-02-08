@@ -1,53 +1,38 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
 @Component
 public class GoogleDriveFileRepository implements FileRepository {
 
-    private static final String APPLICATION_NAME = "Google Drive Organizer";
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 
-    private final AccessTokenProvider accessTokenProvider;
+    private final Drive drive;
     private final DriveConfig driveConfig;
 
     public GoogleDriveFileRepository(
-            AccessTokenProvider accessTokenProvider,
+            Drive drive,
             DriveConfig driveConfig) {
-        this.accessTokenProvider = accessTokenProvider;
+        this.drive = drive;
         this.driveConfig = driveConfig;
     }
 
     @Override
     public List<DriveFile> getFilesInCheckInFolder() {
-        String accessToken = accessTokenProvider.getAccessToken();
-        
-        if (accessToken == null) {
-            throw new IllegalStateException("No access token available");
-        }
-
         try {
-            Drive driveService = buildDriveService(accessToken);
-            
             String query = """
                     '%s' in parents and trashed=false and mimeType!='%s'
                     """.formatted(driveConfig.checkInFolderId(), FOLDER_MIME_TYPE).strip();
             
-            FileList result = driveService.files().list()
+            FileList result = drive.files().list()
                     .setQ(query)
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
                     .setPageSize(30)
@@ -67,20 +52,8 @@ public class GoogleDriveFileRepository implements FileRepository {
                     ))
                     .toList();
 
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to list files from Google Drive", e);
         }
-    }
-
-    private Drive buildDriveService(String accessToken) throws GeneralSecurityException, IOException {
-        HttpRequestInitializer requestInitializer = request ->
-            request.getHeaders().setAuthorization("Bearer " + accessToken);
-
-        return new Drive.Builder(
-                GoogleNetHttpTransport.newTrustedTransport(),
-                JSON_FACTORY,
-                requestInitializer)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
     }
 }

@@ -23,6 +23,7 @@ When writing tests:
 - Use Mockito for mocking
 - leverage TestFixtures of "a" class and it's builders
 - Prefer explicit mocking over ArgumentCaptor (avoid using org.mockito.ArgumentMatchers eq, etc.)
+- Avoid generic argument matchers (anyString(), anyInt(), any(), etc.) - use concrete values instead to make tests more explicit and catch regressions
 - Avoid lenient mocks
 - Prefer parameterized tests where applicable
 - Test names must start with "should..."
