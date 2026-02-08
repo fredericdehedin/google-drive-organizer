@@ -20,6 +20,7 @@ public class GoogleDriveFileRepository implements FileRepository {
 
     private static final String APPLICATION_NAME = "Google Drive Organizer";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 
     private final AccessTokenProvider accessTokenProvider;
     private final DriveConfig driveConfig;
@@ -42,8 +43,12 @@ public class GoogleDriveFileRepository implements FileRepository {
         try {
             Drive driveService = buildDriveService(accessToken);
             
+            String query = """
+                    '%s' in parents and trashed=false and mimeType!='%s'
+                    """.formatted(driveConfig.checkInFolderId(), FOLDER_MIME_TYPE).strip();
+            
             FileList result = driveService.files().list()
-                    .setQ("'" + driveConfig.checkInFolderId() + "' in parents and trashed=false")
+                    .setQ(query)
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
                     .setPageSize(30)
                     .execute();

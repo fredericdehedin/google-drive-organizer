@@ -42,4 +42,12 @@ class GoogleDriveFileRepositoryTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("No access token available");
     }
+
+    @Test
+    void shouldIncludeFolderMimeTypeFilterInQuery() {
+        when(accessTokenProvider.getAccessToken()).thenReturn(null);
+
+        assertThatThrownBy(() -> repository.getFilesInCheckInFolder())
+                .isInstanceOf(IllegalStateException.class);
+    }
 }
