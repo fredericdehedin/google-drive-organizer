@@ -6,7 +6,15 @@
 <body>
     <nav th:fragment="navbar" class="container">
         <ul>
-            <li><strong>Google Drive Organizer</strong></li>
+            <li>
+                <div class="navbar-brand">
+                    <img src="images/logo_only.png" alt="Google Drive Organizer Logo" class="navbar-logo"/>
+                    <div class="brand-text">
+                        <span class="letter-g-blue">G</span><span class="letter-o-red">o</span><span class="letter-o-yellow">o</span><span class="letter-g-blue">g</span><span class="letter-l-green">l</span><span class="letter-e-red">e</span>
+                        <span class="brand-text-secondary"> Drive Organizer</span>
+                    </div>
+                </div>
+            </li>
         </ul>
         <ul>
             <li th:if="${navAuthenticated}">

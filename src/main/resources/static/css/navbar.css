@@ -1,0 +1,60 @@
+/* Import Google's Roboto font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Google brand colors */
+:root {
+    --google-blue: #4285F4;
+    --google-red: #EA4335;
+    --google-yellow: #FBBC04;
+    --google-green: #34A853;
+}
+
+/* Logo container styling */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+}
+
+.navbar-logo {
+    height: 3rem;
+    width: auto;
+}
+
+/* Brand text styling */
+.brand-text {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Individual letter colors for "Google" */
+.letter-g-blue {
+    color: var(--google-blue);
+}
+
+.letter-o-red {
+    color: var(--google-red);
+}
+
+.letter-o-yellow {
+    color: var(--google-yellow);
+}
+
+.letter-l-green {
+    color: var(--google-green);
+}
+
+.letter-e-red {
+    color: var(--google-red);
+}
+
+/* "Drive Organizer" text styling */
+.brand-text-secondary {
+    color: #5f6368;
+}

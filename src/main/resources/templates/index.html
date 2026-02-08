@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Google Drive Organizer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/file-grid.css">
     <script src="/webjars/htmx.org/2.0.8/dist/htmx.min.js"></script>
     <script>
@@ -18,7 +19,6 @@
 <main class="container">
     <!-- Google Drive Files Section -->
     <section id="preview" th:if="${navAuthenticated}">
-        <h2>Google Drive Files</h2>
         <div id="file-list-container" hx-get="/api/files" hx-trigger="load" hx-swap="innerHTML">
             <span aria-busy="true">Loading google drive files.</span>
         </div>
