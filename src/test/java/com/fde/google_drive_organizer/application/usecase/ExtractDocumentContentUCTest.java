@@ -29,7 +29,7 @@ class ExtractDocumentContentUCTest {
         DocumentContent expectedContent = new DocumentContent(fileId, "Extracted text content");
         when(documentContentRepository.extractContent(fileId)).thenReturn(expectedContent);
 
-        DocumentContent result = extractDocumentContentUC.execute(fileId);
+        DocumentContent result = extractDocumentContentUC.extract(fileId);
 
         assertThat(result).isEqualTo(expectedContent);
         verify(documentContentRepository).extractContent(fileId);
@@ -41,7 +41,7 @@ class ExtractDocumentContentUCTest {
         when(documentContentRepository.extractContent(fileId))
                 .thenThrow(new DocumentContentExtractionException(fileId, "Failed to extract content"));
 
-        assertThatThrownBy(() -> extractDocumentContentUC.execute(fileId))
+        assertThatThrownBy(() -> extractDocumentContentUC.extract(fileId))
                 .isInstanceOf(DocumentContentExtractionException.class)
                 .hasMessageContaining("Failed to extract content");
         verify(documentContentRepository).extractContent(fileId);

@@ -1,10 +1,11 @@
 package com.fde.google_drive_organizer.application.usecase;
 
+import com.fde.google_drive_organizer.application.port.inbound.GetThumbnail;
 import com.fde.google_drive_organizer.application.port.outbound.ThumbnailRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetThumbnailUC {
+public class GetThumbnailUC implements GetThumbnail {
 
     private final ThumbnailRepository thumbnailRepository;
 
@@ -12,7 +13,8 @@ public class GetThumbnailUC {
         this.thumbnailRepository = thumbnailRepository;
     }
 
-    public byte[] execute(String fileId) {
+    @Override
+    public byte[] get(String fileId) {
         return thumbnailRepository.getThumbnail(fileId);
     }
 }

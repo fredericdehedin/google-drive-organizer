@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.usecase.ExtractDocumentContentUC;
+import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +14,15 @@ public class ArchiveController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchiveController.class);
 
-    private final ExtractDocumentContentUC extractDocumentContentUC;
+    private final ExtractDocumentContent extractDocumentContent;
 
-    public ArchiveController(ExtractDocumentContentUC extractDocumentContentUC) {
-        this.extractDocumentContentUC = extractDocumentContentUC;
+    public ArchiveController(ExtractDocumentContent extractDocumentContent) {
+        this.extractDocumentContent = extractDocumentContent;
     }
 
     @GetMapping("/api/files/{fileId}/archive")
     public ResponseEntity<Void> archiveFile(@PathVariable String fileId) {
-        DocumentContent content = extractDocumentContentUC.execute(fileId);
+        DocumentContent content = extractDocumentContent.extract(fileId);
         LOGGER.info("Document content for file " + fileId + ":");
         LOGGER.info(content.textContent());
         return ResponseEntity.ok().build();

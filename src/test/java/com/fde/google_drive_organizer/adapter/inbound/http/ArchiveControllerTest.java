@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.usecase.ExtractDocumentContentUC;
+import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -15,10 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ArchiveControllerTest {
 
-    private final ExtractDocumentContentUC extractDocumentContentUC = mock(ExtractDocumentContentUC.class);
+    private final ExtractDocumentContent extractDocumentContent = mock(ExtractDocumentContent.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new ArchiveController(extractDocumentContentUC))
+            .standaloneSetup(new ArchiveController(extractDocumentContent))
             .build();
 
     @Test
@@ -26,11 +26,11 @@ class ArchiveControllerTest {
     void shouldReturnOkWhenArchiveSucceeds() throws Exception {
         String fileId = "test-file-id";
         DocumentContent documentContent = new DocumentContent(fileId, "Sample document text content");
-        when(extractDocumentContentUC.execute(fileId)).thenReturn(documentContent);
+        when(extractDocumentContent.extract(fileId)).thenReturn(documentContent);
 
         mockMvc.perform(get("/api/files/{fileId}/archive", fileId))
                 .andExpect(status().isOk());
 
-        verify(extractDocumentContentUC).execute(fileId);
+        verify(extractDocumentContent).extract(fileId);
     }
 }

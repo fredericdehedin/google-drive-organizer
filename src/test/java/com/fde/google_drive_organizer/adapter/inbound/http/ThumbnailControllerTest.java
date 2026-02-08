@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.usecase.GetThumbnailUC;
+import com.fde.google_drive_organizer.application.port.inbound.GetThumbnail;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -14,10 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ThumbnailControllerTest {
 
-    private final GetThumbnailUC getThumbnailUC = mock(GetThumbnailUC.class);
+    private final GetThumbnail getThumbnail = mock(GetThumbnail.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new ThumbnailController(getThumbnailUC))
+            .standaloneSetup(new ThumbnailController(getThumbnail))
             .build();
 
     @Test
@@ -25,7 +25,7 @@ class ThumbnailControllerTest {
     void shouldReturnThumbnailWhenFoundAndAuthenticated() throws Exception {
         String fileId = "test-file-id";
         byte[] thumbnailData = new byte[]{1, 2, 3, 4, 5};
-        when(getThumbnailUC.execute(fileId)).thenReturn(thumbnailData);
+        when(getThumbnail.get(fileId)).thenReturn(thumbnailData);
 
         mockMvc.perform(get("/api/thumbnails/{fileId}", fileId))
                 .andExpect(status().isOk())
@@ -38,7 +38,7 @@ class ThumbnailControllerTest {
     @WithMockUser
     void shouldReturn404WhenThumbnailNotFoundAndAuthenticated() throws Exception {
         String fileId = "non-existent-file-id";
-        when(getThumbnailUC.execute(fileId)).thenReturn(null);
+        when(getThumbnail.get(fileId)).thenReturn(null);
 
         mockMvc.perform(get("/api/thumbnails/{fileId}", fileId))
                 .andExpect(status().isNotFound());

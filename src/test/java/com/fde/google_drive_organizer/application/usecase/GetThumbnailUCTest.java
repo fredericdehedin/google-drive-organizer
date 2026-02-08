@@ -26,7 +26,7 @@ class GetThumbnailUCTest {
         byte[] expectedThumbnail = new byte[]{1, 2, 3};
         when(thumbnailRepository.getThumbnail(fileId)).thenReturn(expectedThumbnail);
 
-        byte[] result = getThumbnailUC.execute(fileId);
+        byte[] result = getThumbnailUC.get(fileId);
 
         assertThat(result).isEqualTo(expectedThumbnail);
         verify(thumbnailRepository).getThumbnail(fileId);
@@ -37,7 +37,7 @@ class GetThumbnailUCTest {
         String fileId = "non-existent-file-id";
         when(thumbnailRepository.getThumbnail(fileId)).thenReturn(null);
 
-        byte[] result = getThumbnailUC.execute(fileId);
+        byte[] result = getThumbnailUC.get(fileId);
 
         assertThat(result).isNull();
         verify(thumbnailRepository).getThumbnail(fileId);

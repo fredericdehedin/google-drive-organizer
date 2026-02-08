@@ -35,7 +35,7 @@ class ListDriveFilesUCTest {
 
         when(fileRepository.getFilesInCheckInFolder()).thenReturn(expectedFiles);
 
-        List<DriveFile> actualFiles = useCase.execute();
+        List<DriveFile> actualFiles = useCase.list();
 
         assertThat(actualFiles).isEqualTo(expectedFiles);
     }
@@ -44,7 +44,7 @@ class ListDriveFilesUCTest {
     void shouldReturnEmptyListWhenNoFilesInCheckInFolder() {
         when(fileRepository.getFilesInCheckInFolder()).thenReturn(List.of());
 
-        List<DriveFile> actualFiles = useCase.execute();
+        List<DriveFile> actualFiles = useCase.list();
 
         assertThat(actualFiles).isEmpty();
     }

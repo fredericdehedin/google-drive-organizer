@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.usecase.ListDriveFilesUC;
+import com.fde.google_drive_organizer.application.port.inbound.ListDriveFiles;
 import com.fde.google_drive_organizer.domain.model.DriveFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +19,17 @@ public class FileListController {
     private static final String DRIVE_FILES = "driveFiles";
     private static final Logger log = LoggerFactory.getLogger(FileListController.class);
 
-    private final ListDriveFilesUC listDriveFilesUseCase;
+    private final ListDriveFiles listDriveFiles;
 
-    public FileListController(ListDriveFilesUC listDriveFilesUseCase) {
-        this.listDriveFilesUseCase = listDriveFilesUseCase;
+    public FileListController(ListDriveFiles listDriveFiles) {
+        this.listDriveFiles = listDriveFiles;
     }
 
     @GetMapping("/api/files")
     public String getFileList(@AuthenticationPrincipal OAuth2User user, Model model) {
         if (user != null) {
             try {
-                List<DriveFile> files = listDriveFilesUseCase.execute();
+                List<DriveFile> files = listDriveFiles.list();
                 model.addAttribute(DRIVE_FILES, files);
             } catch (IllegalStateException e) {
                 log.warn("Failed to retrieve drive files: {}", e.getMessage());

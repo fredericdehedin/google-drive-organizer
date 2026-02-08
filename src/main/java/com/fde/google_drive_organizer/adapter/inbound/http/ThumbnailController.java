@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.usecase.GetThumbnailUC;
+import com.fde.google_drive_organizer.application.port.inbound.GetThumbnail;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +15,15 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/thumbnails")
 public class ThumbnailController {
 
-    private final GetThumbnailUC getThumbnailUC;
+    private final GetThumbnail getThumbnail;
 
-    public ThumbnailController(GetThumbnailUC getThumbnailUC) {
-        this.getThumbnailUC = getThumbnailUC;
+    public ThumbnailController(GetThumbnail getThumbnail) {
+        this.getThumbnail = getThumbnail;
     }
 
     @GetMapping("/{fileId}")
     public ResponseEntity<byte[]> getThumbnail(@PathVariable String fileId) {
-        byte[] thumbnail = getThumbnailUC.execute(fileId);
+        byte[] thumbnail = getThumbnail.get(fileId);
 
         if (thumbnail == null) {
             return ResponseEntity.notFound().build();
