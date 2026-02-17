@@ -24,3 +24,4 @@ htmx-webjars = { group = "org.webjars.npm", name = "htmx.org", version.ref = "ht
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 tika-core = { group = "org.apache.tika", name = "tika-core", version.ref = "tika" }
 tika-parsers-standard = { group = "org.apache.tika", name = "tika-parsers-standard-package", version.ref = "tika" }
+tika-parser-ocr = { group = "org.apache.tika", name = "tika-parser-ocr-module", version.ref = "tika" }

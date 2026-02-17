@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.google.drive)
     implementation(libs.tika.core)
     implementation(libs.tika.parsers.standard)
+    implementation(libs.tika.parser.ocr)
 
     testImplementation(platform(libs.spring.boot.bom))
     testImplementation(libs.spring.boot.starter.test)

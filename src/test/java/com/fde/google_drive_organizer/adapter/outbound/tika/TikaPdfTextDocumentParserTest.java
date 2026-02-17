@@ -10,16 +10,16 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TikaDocumentParserTest {
+class TikaPdfTextDocumentParserTest {
 
-    private final TikaDocumentParser tikaDocumentParser = new TikaDocumentParser();
+    private final TikaPdfTextDocumentParser tikaPdfTextDocumentParser = new TikaPdfTextDocumentParser();
 
     @Test
     void shouldParseTextFromPlainTextInputStream() throws IOException, TikaException {
         String content = "Hello, this is plain text content.";
         InputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
-        String result = tikaDocumentParser.parseToText(inputStream);
+        String result = tikaPdfTextDocumentParser.parseToText(inputStream);
 
         assertThat(result).contains("Hello, this is plain text content.");
     }
@@ -28,7 +28,7 @@ class TikaDocumentParserTest {
     void shouldReturnEmptyStringForEmptyInputStream() throws IOException, TikaException {
         InputStream inputStream = new ByteArrayInputStream(new byte[0]);
 
-        String result = tikaDocumentParser.parseToText(inputStream);
+        String result = tikaPdfTextDocumentParser.parseToText(inputStream);
 
         assertThat(result).isEmpty();
     }

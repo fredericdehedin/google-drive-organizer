@@ -18,6 +18,9 @@ spring:
 drive:
   check-in-folder-id: ${GOOGLE_DRIVE_FOLDER_ID}
 
+ocr:
+  language: deu+eng
+
 thumbnail:
   cache:
     directory: ${THUMBNAIL_CACHE_DIR:./cache/thumbnails}

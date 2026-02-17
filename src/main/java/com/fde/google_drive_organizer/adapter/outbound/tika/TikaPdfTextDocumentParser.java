@@ -9,10 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class TikaDocumentParser {
+public class TikaPdfTextDocumentParser implements DocumentParser {
 
     private final Tika tika = new Tika();
 
+    @Override
     public String parseToText(InputStream inputStream) throws IOException, TikaException {
         try {
             return tika.parseToString(inputStream);
