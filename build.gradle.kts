@@ -35,9 +35,10 @@ dependencies {
     implementation(libs.spring.boot.starter.oauth2.client)
     implementation(libs.htmx.webjars)
     implementation(libs.google.drive)
+    implementation(libs.pdfbox)
+    implementation(libs.tess4j)
     implementation(libs.tika.core)
     implementation(libs.tika.parsers.standard)
-    implementation(libs.tika.parser.ocr)
 
     testImplementation(platform(libs.spring.boot.bom))
     testImplementation(libs.spring.boot.starter.test)
@@ -48,4 +49,9 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.named("bootRun") {
+	( this as org.springframework.boot.gradle.tasks.run.BootRun ).jvmArgs("--enable-native-access=ALL-UNNAMED")
 }

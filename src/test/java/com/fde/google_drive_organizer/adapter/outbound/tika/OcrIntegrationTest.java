@@ -4,7 +4,6 @@ import org.apache.tika.exception.TikaException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,11 +11,12 @@ import java.io.InputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("integration")
-@DisabledIf("isTesseractNotAvailable")
 class OcrIntegrationTest {
 
     private static final String TEXT_SEARCHABLE_PDF = "/pdf/test-text-searchable.pdf";
     private static final String NON_TEXT_SEARCHABLE_PDF = "/pdf/test-non-text-searchable.pdf";
+    private static final String TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR";
+    private static final String TESSDATA_PATH = "C:\\Program Files\\Tesseract-OCR\\tessdata";
 
     @BeforeAll
     static void checkTesseractAvailability() {
@@ -55,7 +55,7 @@ class OcrIntegrationTest {
 
     @Test
     void shouldExtractTextFromNonSearchablePdfUsingOcr() throws IOException, TikaException {
-        OcrConfig config = new OcrConfig("deu+eng");
+        OcrConfig config = new OcrConfig("deu+eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser parser = new TesseractOcrDocumentParser(config);
 
         try (InputStream inputStream = getClass().getResourceAsStream(NON_TEXT_SEARCHABLE_PDF)) {
@@ -69,7 +69,7 @@ class OcrIntegrationTest {
 
     @Test
     void shouldUseConfiguredLanguageForOcr() throws IOException, TikaException {
-        OcrConfig englishConfig = new OcrConfig("eng");
+        OcrConfig englishConfig = new OcrConfig("eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser parser = new TesseractOcrDocumentParser(englishConfig);
 
         try (InputStream inputStream = getClass().getResourceAsStream(NON_TEXT_SEARCHABLE_PDF)) {
@@ -99,14 +99,14 @@ class OcrIntegrationTest {
     @Test
     void shouldFallbackToOcrWhenTextExtractionReturnsEmpty() throws IOException, TikaException {
         TikaPdfTextDocumentParser textParser = new TikaPdfTextDocumentParser();
-        OcrConfig config = new OcrConfig("deu+eng");
+        OcrConfig config = new OcrConfig("deu+eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser ocrParser = new TesseractOcrDocumentParser(config);
 
         try (InputStream textStream = getClass().getResourceAsStream(NON_TEXT_SEARCHABLE_PDF)) {
             assertThat(textStream).isNotNull();
 
             String textResult = textParser.parseToText(textStream);
-
+System.out.println("textResult:"+textResult);
             if (textResult.isBlank()) {
                 try (InputStream ocrStream = getClass().getResourceAsStream(NON_TEXT_SEARCHABLE_PDF)) {
                     String ocrResult = ocrParser.parseToText(ocrStream);

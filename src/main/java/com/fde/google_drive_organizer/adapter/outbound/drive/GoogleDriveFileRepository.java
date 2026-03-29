@@ -4,6 +4,7 @@ import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
 import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,13 +16,13 @@ public class GoogleDriveFileRepository implements FileRepository {
 
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 
-    private final Drive drive;
+    private final ObjectProvider<Drive> driveProvider;
     private final DriveConfig driveConfig;
 
     public GoogleDriveFileRepository(
-            Drive drive,
+            ObjectProvider<Drive> driveProvider,
             DriveConfig driveConfig) {
-        this.drive = drive;
+        this.driveProvider = driveProvider;
         this.driveConfig = driveConfig;
     }
 
@@ -32,7 +33,7 @@ public class GoogleDriveFileRepository implements FileRepository {
                     '%s' in parents and trashed=false and mimeType!='%s'
                     """.formatted(driveConfig.checkInFolderId(), FOLDER_MIME_TYPE).strip();
             
-            FileList result = drive.files().list()
+            FileList result = driveProvider.getObject().files().list()
                     .setQ(query)
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")
                     .setPageSize(30)

@@ -13,7 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = OcrConfigTest.TestConfig.class)
 @TestPropertySource(properties = {
-        "ocr.language=fra"
+        "ocr.language=fra",
+        "ocr.tesseract-path=C:\\\\Program Files\\\\Tesseract-OCR",
+        "ocr.tessdata-path=C:\\\\Program Files\\\\Tesseract-OCR\\\\tessdata"
 })
 class OcrConfigTest {
 
@@ -26,5 +28,15 @@ class OcrConfigTest {
     @Test
     void shouldBindLanguageProperty() {
         assertThat(config.language()).isEqualTo("fra");
+    }
+
+    @Test
+    void shouldBindTesseractPath() {
+        assertThat(config.tesseractPath()).isEqualTo("C:\\Program Files\\Tesseract-OCR");
+    }
+
+    @Test
+    void shouldBindTessdataPath() {
+        assertThat(config.tessdataPath()).isEqualTo("C:\\Program Files\\Tesseract-OCR\\tessdata");
     }
 }

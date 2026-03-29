@@ -23,4 +23,14 @@ class OcrConfigDefaultTest {
     void shouldUseDefaultLanguageWhenNotConfigured() {
         assertThat(config.language()).isEqualTo("deu+eng");
     }
+
+    @Test
+    void shouldUseDefaultTesseractPathWhenNotConfigured() {
+        assertThat(config.tesseractPath()).isEqualTo("C:\\Program Files\\Tesseract-OCR");
+    }
+
+    @Test
+    void shouldUseDefaultTessdataPathWhenNotConfigured() {
+        assertThat(config.tessdataPath()).isEqualTo("C:\\Program Files\\Tesseract-OCR\\tessdata");
+    }
 }

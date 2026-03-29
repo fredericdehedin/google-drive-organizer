@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.io.IOException;
 
@@ -19,6 +20,9 @@ import static org.mockito.Mockito.when;
 class GoogleDriveThumbnailRepositoryTest {
 
     @Mock
+    private ObjectProvider<Drive> driveProvider;
+
+    @Mock
     private Drive drive;
 
     @Mock
@@ -28,7 +32,7 @@ class GoogleDriveThumbnailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new GoogleDriveThumbnailRepository(drive, accessTokenProvider);
+        repository = new GoogleDriveThumbnailRepository(driveProvider, accessTokenProvider);
     }
 
     @Test
@@ -52,6 +56,7 @@ class GoogleDriveThumbnailRepositoryTest {
     @Test
     void shouldThrowRuntimeExceptionWhenDriveApiCallFails() throws IOException {
         when(accessTokenProvider.getAccessToken()).thenReturn("valid-token");
+        when(driveProvider.getObject()).thenReturn(drive);
         
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.Get getRequest = mock(Drive.Files.Get.class);

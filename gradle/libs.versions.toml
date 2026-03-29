@@ -4,6 +4,8 @@ htmx-webjars = "2.0.8"
 google-api-client = "2.8.1"
 google-oauth-client = "1.36.0"
 google-drive = "v3-rev197-1.25.0"
+pdfbox = "3.0.2"
+tess4j = "5.12.0"
 tika = "3.2.3"
 
 [plugins]
@@ -22,6 +24,7 @@ google-oauth-client = { group = "com.google.oauth-client", name = "google-oauth-
 google-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "google-drive" }
 htmx-webjars = { group = "org.webjars.npm", name = "htmx.org", version.ref = "htmx-webjars" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
+tess4j = { group = "net.sourceforge.tess4j", name = "tess4j", version.ref = "tess4j" }
 tika-core = { group = "org.apache.tika", name = "tika-core", version.ref = "tika" }
 tika-parsers-standard = { group = "org.apache.tika", name = "tika-parsers-standard-package", version.ref = "tika" }
-tika-parser-ocr = { group = "org.apache.tika", name = "tika-parser-ocr-module", version.ref = "tika" }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,14 +25,18 @@ class GoogleDriveFileRepositoryTest {
     private static final String CHECK_IN_FOLDER_ID = "test-folder-id";
 
     @Mock
+    private ObjectProvider<Drive> driveProvider;
+
+    @Mock
     private Drive drive;
 
     private GoogleDriveFileRepository repository;
 
     @BeforeEach
     void setUp() {
+        when(driveProvider.getObject()).thenReturn(drive);
         DriveConfig config = new DriveConfig(CHECK_IN_FOLDER_ID);
-        repository = new GoogleDriveFileRepository(drive, config);
+        repository = new GoogleDriveFileRepository(driveProvider, config);
     }
 
     @Test

@@ -20,6 +20,8 @@ drive:
 
 ocr:
   language: deu+eng
+  tesseract-path: C:\\Program Files\\Tesseract-OCR
+  tessdata-path: C:\\Program Files\\Tesseract-OCR\\tessdata
 
 thumbnail:
   cache:

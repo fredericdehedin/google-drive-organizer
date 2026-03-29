@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,6 +27,9 @@ class GoogleDriveDocumentContentRepositoryTest {
 
     private static final String FILE_ID = "test-file-id";
     private static final byte[] FILE_CONTENT = "PDF content".getBytes(StandardCharsets.UTF_8);
+
+    @Mock
+    private ObjectProvider<Drive> driveProvider;
 
     @Mock
     private Drive drive;
@@ -46,7 +50,8 @@ class GoogleDriveDocumentContentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new GoogleDriveDocumentContentRepository(drive, textParser, ocrParser);
+        when(driveProvider.getObject()).thenReturn(drive);
+        repository = new GoogleDriveDocumentContentRepository(driveProvider, textParser, ocrParser);
     }
 
     @Test
@@ -68,7 +73,7 @@ class GoogleDriveDocumentContentRepositoryTest {
     }
 
     @Test
-    void shouldFallbackToOcrWhenTextParserReturnsEmptyString() throws IOException, TikaException {
+    void shouldFallbackToOcrWhenTextParserReturnsEmptyString() throws IOException {
         InputStream inputStream = new ByteArrayInputStream(FILE_CONTENT);
         when(drive.files()).thenReturn(files);
         when(files.get(FILE_ID)).thenReturn(get);
@@ -88,7 +93,7 @@ class GoogleDriveDocumentContentRepositoryTest {
     }
 
     @Test
-    void shouldNotUseOcrWhenTextParserReturnsContent() throws IOException, TikaException {
+    void shouldNotUseOcrWhenTextParserReturnsContent() throws IOException {
         InputStream inputStream = new ByteArrayInputStream(FILE_CONTENT);
         when(drive.files()).thenReturn(files);
         when(files.get(FILE_ID)).thenReturn(get);
@@ -111,28 +116,29 @@ class GoogleDriveDocumentContentRepositoryTest {
 
         assertThatThrownBy(() -> repository.extractContent(FILE_ID))
                 .isInstanceOf(DocumentContentExtractionException.class)
-                .hasMessageContaining("Failed to extract content from Google Drive")
+                .hasMessageContaining("Failed to download content from Google Drive")
                 .hasCauseInstanceOf(IOException.class);
     }
 
     @Test
-    void shouldThrowExceptionWhenTextParserFails() throws IOException, TikaException {
+    void shouldThrowExceptionWhenTextParserFails() throws IOException {
         InputStream inputStream = new ByteArrayInputStream(FILE_CONTENT);
         when(drive.files()).thenReturn(files);
         when(files.get(FILE_ID)).thenReturn(get);
         when(get.executeMediaAsInputStream()).thenReturn(inputStream);
 
         ArgumentCaptor<InputStream> streamCaptor = ArgumentCaptor.forClass(InputStream.class);
-        when(textParser.parseToText(streamCaptor.capture())).thenThrow(new TikaException("Parse error"));
+        when(textParser.parseToText(streamCaptor.capture()))
+            .thenThrow(new DocumentContentExtractionException("Text extraction failed", new RuntimeException("Parse error")));
 
         assertThatThrownBy(() -> repository.extractContent(FILE_ID))
                 .isInstanceOf(DocumentContentExtractionException.class)
                 .hasMessageContaining("Failed to extract content from Google Drive")
-                .hasCauseInstanceOf(TikaException.class);
+                .hasCauseInstanceOf(DocumentContentExtractionException.class);
     }
 
     @Test
-    void shouldThrowExceptionWhenOcrParserFails() throws IOException, TikaException {
+    void shouldThrowExceptionWhenOcrParserFails() throws IOException {
         InputStream inputStream = new ByteArrayInputStream(FILE_CONTENT);
         when(drive.files()).thenReturn(files);
         when(files.get(FILE_ID)).thenReturn(get);
@@ -141,11 +147,12 @@ class GoogleDriveDocumentContentRepositoryTest {
         ArgumentCaptor<InputStream> textStreamCaptor = ArgumentCaptor.forClass(InputStream.class);
         ArgumentCaptor<InputStream> ocrStreamCaptor = ArgumentCaptor.forClass(InputStream.class);
         when(textParser.parseToText(textStreamCaptor.capture())).thenReturn("");
-        when(ocrParser.parseToText(ocrStreamCaptor.capture())).thenThrow(new TikaException("OCR error"));
+        when(ocrParser.parseToText(ocrStreamCaptor.capture()))
+            .thenThrow(new DocumentContentExtractionException("OCR extraction failed", new RuntimeException("OCR error")));
 
         assertThatThrownBy(() -> repository.extractContent(FILE_ID))
                 .isInstanceOf(DocumentContentExtractionException.class)
                 .hasMessageContaining("Failed to extract content from Google Drive")
-                .hasCauseInstanceOf(TikaException.class);
+                .hasCauseInstanceOf(DocumentContentExtractionException.class);
     }
 }

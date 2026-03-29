@@ -5,6 +5,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Repository;
 
 import java.io.ByteArrayOutputStream;
@@ -18,13 +19,13 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
 
     private static final Logger log = LoggerFactory.getLogger(GoogleDriveThumbnailRepository.class);
 
-    private final Drive drive;
+    private final ObjectProvider<Drive> driveProvider;
     private final AccessTokenProvider accessTokenProvider;
 
     public GoogleDriveThumbnailRepository(
-            Drive drive,
+            ObjectProvider<Drive> driveProvider,
             AccessTokenProvider accessTokenProvider) {
-        this.drive = drive;
+        this.driveProvider = driveProvider;
         this.accessTokenProvider = accessTokenProvider;
     }
 
@@ -38,7 +39,7 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
                 return null;
             }
 
-            File file = drive.files().get(fileId)
+            File file = driveProvider.getObject().files().get(fileId)
                     .setFields("thumbnailLink")
                     .execute();
 

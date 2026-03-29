@@ -14,6 +14,14 @@ public class DocumentContentExtractionException extends RuntimeException {
         this.fileId = fileId;
     }
 
+    /**
+     * Convenience constructor for use when the failing code path doesn't have a Google Drive fileId.
+     */
+    public DocumentContentExtractionException(String message, Throwable cause) {
+        super(message, cause);
+        this.fileId = null;
+    }
+
     public String getFileId() {
         return fileId;
     }

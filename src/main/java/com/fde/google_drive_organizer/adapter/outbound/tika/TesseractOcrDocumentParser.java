@@ -1,19 +1,19 @@
 package com.fde.google_drive_organizer.adapter.outbound.tika;
 
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.exception.ZeroByteFileException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.pdf.PDFParserConfig;
-import org.apache.tika.parser.ocr.TesseractOCRConfig;
-import org.apache.tika.sax.BodyContentHandler;
+import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
-import org.xml.sax.SAXException;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,33 +30,42 @@ public class TesseractOcrDocumentParser implements DocumentParser {
     }
 
     @Override
-    public String parseToText(InputStream inputStream) throws IOException, TikaException {
-        try {
-            TesseractOCRConfig tesseractConfig = new TesseractOCRConfig();
-            tesseractConfig.setLanguage(ocrConfig.language());
+    public String parseToText(InputStream inputStream) throws IOException {
+        byte[] pdfBytes = inputStream.readAllBytes();
 
-            PDFParserConfig pdfConfig = new PDFParserConfig();
-            pdfConfig.setExtractInlineImages(true);
-            pdfConfig.setOcrStrategy(PDFParserConfig.OCR_STRATEGY.OCR_ONLY);
-
-            ParseContext parseContext = new ParseContext();
-            parseContext.set(TesseractOCRConfig.class, tesseractConfig);
-            parseContext.set(PDFParserConfig.class, pdfConfig);
-
-            AutoDetectParser parser = new AutoDetectParser();
-            BodyContentHandler handler = new BodyContentHandler(-1);
-            Metadata metadata = new Metadata();
-
-            parser.parse(inputStream, handler, metadata, parseContext);
-
-            String ocrText = handler.toString();
-            log.debug("OCR extraction completed, extracted {} characters", ocrText.length());
-            return ocrText;
-
-        } catch (ZeroByteFileException e) {
+        if (pdfBytes.length == 0) {
             return "";
-        } catch (SAXException e) {
-            throw new TikaException("SAX parsing error during OCR extraction", e);
+        }
+
+        try (RandomAccessReadBuffer pdfBuffer = new RandomAccessReadBuffer(pdfBytes);
+             PDDocument document = Loader.loadPDF(pdfBuffer)) {
+            if (document.getNumberOfPages() == 0) {
+                log.warn("No pages found");
+                return "";
+            }
+
+            Tesseract tesseract = new Tesseract();
+            tesseract.setLanguage(ocrConfig.language());
+            tesseract.setDatapath(ocrConfig.tessdataPath());
+
+            PDFRenderer renderer = new PDFRenderer(document);
+            StringBuilder ocrText = new StringBuilder();
+
+            for (int pageIndex = 0; pageIndex < document.getNumberOfPages(); pageIndex++) {
+                BufferedImage image = renderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
+                String pageText = tesseract.doOCR(image);
+
+                if (pageText != null && !pageText.isBlank()) {
+                    if (!ocrText.isEmpty()) {
+                        ocrText.append(System.lineSeparator());
+                    }
+                    ocrText.append(pageText.trim());
+                }
+            }
+
+            return ocrText.toString();
+        } catch (TesseractException e) {
+            throw new DocumentContentExtractionException("OCR extraction failed", e);
         }
     }
 }
