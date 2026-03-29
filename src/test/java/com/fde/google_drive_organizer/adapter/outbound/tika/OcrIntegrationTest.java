@@ -40,7 +40,8 @@ class OcrIntegrationTest {
     }
 
     @Test
-    void shouldExtractTextFromSearchablePdf() throws IOException, TikaException {
+    @Tag("integration")
+    void shouldExtractTextFromSearchablePdf() throws IOException{
         TikaPdfTextDocumentParser parser = new TikaPdfTextDocumentParser();
 
         try (InputStream inputStream = getClass().getResourceAsStream(TEXT_SEARCHABLE_PDF)) {
@@ -54,7 +55,8 @@ class OcrIntegrationTest {
     }
 
     @Test
-    void shouldExtractTextFromNonSearchablePdfUsingOcr() throws IOException, TikaException {
+    @Tag("integration")
+    void shouldExtractTextFromNonSearchablePdfUsingOcr() throws IOException {
         OcrConfig config = new OcrConfig("deu+eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser parser = new TesseractOcrDocumentParser(config);
 
@@ -68,7 +70,8 @@ class OcrIntegrationTest {
     }
 
     @Test
-    void shouldUseConfiguredLanguageForOcr() throws IOException, TikaException {
+    @Tag("integration")
+    void shouldUseConfiguredLanguageForOcr() throws IOException {
         OcrConfig englishConfig = new OcrConfig("eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser parser = new TesseractOcrDocumentParser(englishConfig);
 
@@ -82,6 +85,7 @@ class OcrIntegrationTest {
     }
 
     @Test
+    @Tag("integration")
     void shouldReturnEmptyForSearchablePdfWithTextParser() throws IOException {
         TikaPdfTextDocumentParser textParser = new TikaPdfTextDocumentParser();
 
@@ -97,6 +101,7 @@ class OcrIntegrationTest {
     }
 
     @Test
+    @Tag("integration")
     void shouldFallbackToOcrWhenTextExtractionReturnsEmpty() throws IOException {
         TikaPdfTextDocumentParser textParser = new TikaPdfTextDocumentParser();
         OcrConfig config = new OcrConfig("deu+eng", TESSERACT_PATH, TESSDATA_PATH);
@@ -106,7 +111,7 @@ class OcrIntegrationTest {
             assertThat(textStream).isNotNull();
 
             String textResult = textParser.parseToText(textStream);
-System.out.println("textResult:"+textResult);
+
             if (textResult.isBlank()) {
                 try (InputStream ocrStream = getClass().getResourceAsStream(NON_TEXT_SEARCHABLE_PDF)) {
                     String ocrResult = ocrParser.parseToText(ocrStream);

@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 @Repository
@@ -61,7 +62,7 @@ public class GoogleDriveThumbnailRepository implements ThumbnailRepository {
     }
 
     private byte[] downloadThumbnailFromUrl(String thumbnailUrl, String accessToken) throws IOException {
-        URL url = new URL(thumbnailUrl);
+        URL url = URI.create(thumbnailUrl).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Authorization", "Bearer " + accessToken);
         connection.setRequestMethod("GET");
