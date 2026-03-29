@@ -3,7 +3,7 @@ package com.fde.google_drive_organizer.adapter.outbound.drive;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import java.security.GeneralSecurityException;
 public class GoogleDriveConfiguration {
 
     public static final String APPLICATION_NAME = "Google Drive Organizer";
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
