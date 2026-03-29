@@ -1,6 +1,7 @@
 plugins {
 	java
 	alias(libs.plugins.spring.boot)
+	jacoco
 }
 
 group = "com.fde"
