@@ -7,7 +7,6 @@ For your tax return in the Canton of St. Gallen, it pays off to use a clear fold
 ## Recommended top-level structure
 
 ```text
-Taxes/
 └── 2025/
 └── 2024/
 └── 2023/
