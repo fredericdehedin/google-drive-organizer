@@ -26,7 +26,8 @@
                 <footer class="file-card-footer">
                     <button type="button" class="archive-button"
                             th:data-file-id="${file.id()}"
-                            onclick="archiveFile(this.dataset.fileId)">
+                            th:data-file-name="${file.name()}"
+                            onclick="archiveFile(this.dataset.fileId, this.dataset.fileName)">
                         Archive
                     </button>
                 </footer>
@@ -37,8 +38,8 @@
         <p>No files found in the configured folder.</p>
     </div>
     <script>
-        function archiveFile(fileId) {
-            fetch('/api/files/' + fileId + '/archive', {
+        function archiveFile(fileId, fileName) {
+            fetch('/api/files/' + fileId + '/archive?fileName=' + encodeURIComponent(fileName), {
                 method: 'GET'
             })
             .then(response => {
