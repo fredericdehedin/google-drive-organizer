@@ -37,7 +37,7 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
     private String loadResource(String path) {
         try {
             Resource resource = resourceLoader.getResource(path);
-            return resource.getContentAsString(StandardCharsets.UTF_8);
+            return resource.getContentAsString(StandardCharsets.UTF_8).replace("\r\n", "\n");
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to load prompt from: " + path, e);
         }

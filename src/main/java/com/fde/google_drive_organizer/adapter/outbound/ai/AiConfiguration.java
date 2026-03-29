@@ -2,6 +2,8 @@ package com.fde.google_drive_organizer.adapter.outbound.ai;
 
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.model.ApiKey;
+import org.springframework.ai.model.SimpleApiKey;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
@@ -14,11 +16,19 @@ public class AiConfiguration {
 
     @Bean
     public ChatModel chatModel(DriveOrganizerAiConfig config) {
-        OpenAiApi openAiApi = new OpenAiApi(config.baseUrl(), config.apiKey());
+
+        ApiKey apiKey = new SimpleApiKey(config.apiKey());
+        OpenAiApi openAiApi = OpenAiApi.builder()
+                .apiKey(apiKey)
+                .baseUrl(config.baseUrl())
+                .build();
         OpenAiChatOptions options = OpenAiChatOptions.builder()
                 .model(config.model())
                 .build();
-        return new OpenAiChatModel(openAiApi, options);
+        return OpenAiChatModel.builder()
+                .openAiApi(openAiApi)
+                .defaultOptions(options)
+                .build();
     }
 
     @Bean
