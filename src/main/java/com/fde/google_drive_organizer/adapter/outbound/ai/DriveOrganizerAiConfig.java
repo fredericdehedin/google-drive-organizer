@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @ConfigurationProperties(prefix = "drive-organizer.ai")
 public record DriveOrganizerAiConfig(
         String baseUrl,
+        String completionsPath,
         String apiKey,
         String model,
         @DefaultValue("classpath:prompts/suggest-target-folder-command.md") String commandPromptPath,

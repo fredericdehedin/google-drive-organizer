@@ -27,7 +27,8 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
     @BeforeEach
     void setUp() {
         DriveOrganizerAiConfig config = new DriveOrganizerAiConfig(
-                "https://api.example.com/v1",
+                "https://api.example.com",
+                "/v1",
                 "test-key",
                 "gpt-4o",
                 "classpath:prompts/test-suggest-target-folder-command.md",

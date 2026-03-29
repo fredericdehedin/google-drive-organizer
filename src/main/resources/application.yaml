@@ -30,6 +30,7 @@ thumbnail:
 drive-organizer:
   ai:
     base-url: ${AI_BASE_URL}
+    completions-path: /chat/completions
     api-key: ${AI_API_KEY}
     model: ${AI_MODEL}
 

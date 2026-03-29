@@ -21,6 +21,7 @@ public class AiConfiguration {
         OpenAiApi openAiApi = OpenAiApi.builder()
                 .apiKey(apiKey)
                 .baseUrl(config.baseUrl())
+                .completionsPath(config.completionsPath())
                 .build();
         OpenAiChatOptions options = OpenAiChatOptions.builder()
                 .model(config.model())
