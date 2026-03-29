@@ -82,7 +82,7 @@ class OcrIntegrationTest {
     }
 
     @Test
-    void shouldReturnEmptyForSearchablePdfWithTextParser() throws IOException, TikaException {
+    void shouldReturnEmptyForSearchablePdfWithTextParser() throws IOException {
         TikaPdfTextDocumentParser textParser = new TikaPdfTextDocumentParser();
 
         try (InputStream inputStream = getClass().getResourceAsStream(TEXT_SEARCHABLE_PDF)) {
@@ -97,7 +97,7 @@ class OcrIntegrationTest {
     }
 
     @Test
-    void shouldFallbackToOcrWhenTextExtractionReturnsEmpty() throws IOException, TikaException {
+    void shouldFallbackToOcrWhenTextExtractionReturnsEmpty() throws IOException {
         TikaPdfTextDocumentParser textParser = new TikaPdfTextDocumentParser();
         OcrConfig config = new OcrConfig("deu+eng", TESSERACT_PATH, TESSDATA_PATH);
         TesseractOcrDocumentParser ocrParser = new TesseractOcrDocumentParser(config);
