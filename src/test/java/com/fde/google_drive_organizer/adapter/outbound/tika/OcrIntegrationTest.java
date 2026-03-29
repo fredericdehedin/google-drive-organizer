@@ -1,7 +1,5 @@
 package com.fde.google_drive_organizer.adapter.outbound.tika;
 
-import org.apache.tika.exception.TikaException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -17,27 +15,6 @@ class OcrIntegrationTest {
     private static final String NON_TEXT_SEARCHABLE_PDF = "/pdf/test-non-text-searchable.pdf";
     private static final String TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR";
     private static final String TESSDATA_PATH = "C:\\Program Files\\Tesseract-OCR\\tessdata";
-
-    @BeforeAll
-    static void checkTesseractAvailability() {
-        // Verification happens in isTesseractNotAvailable()
-    }
-
-    static boolean isTesseractNotAvailable() {
-        return !isTesseractInstalled();
-    }
-
-    private static boolean isTesseractInstalled() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("tesseract", "--version");
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-            int exitCode = process.waitFor();
-            return exitCode == 0;
-        } catch (IOException | InterruptedException e) {
-            return false;
-        }
-    }
 
     @Test
     @Tag("integration")

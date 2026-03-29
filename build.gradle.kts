@@ -50,7 +50,12 @@ dependencies {
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+	useJUnitPlatform {
+		val excludeTagsProperty = System.getProperty("excludeTags")
+		if (excludeTagsProperty != null) {
+			excludeTags(*excludeTagsProperty.split(",").toTypedArray())
+		}
+	}
 	jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
