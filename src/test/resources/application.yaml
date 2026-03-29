@@ -1,0 +1,18 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+drive:
+  root-folder-id: test-folder-id
+
+drive-organizer:
+  ai:
+    base-url: https://api.example.com/v1
+    completions-path: /chat/completions
+    api-key: test-key
+    model: gpt-4o
