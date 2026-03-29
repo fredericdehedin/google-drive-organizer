@@ -28,6 +28,7 @@ repositories {
 
 dependencies {
     implementation(platform(libs.spring.boot.bom))
+    implementation(platform(libs.spring.ai.bom))
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.webmvc)
     implementation(libs.spring.boot.starter.thymeleaf)
@@ -39,6 +40,7 @@ dependencies {
     implementation(libs.tess4j)
     implementation(libs.tika.core)
     implementation(libs.tika.parsers.standard)
+    implementation(libs.spring.ai.openai)
 
     testImplementation(platform(libs.spring.boot.bom))
     testImplementation(libs.spring.boot.starter.test)

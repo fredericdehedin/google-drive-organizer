@@ -16,7 +16,7 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
 drive:
-  check-in-folder-id: ${GOOGLE_DRIVE_FOLDER_ID}
+  root-folder-id: ${GOOGLE_DRIVE_FOLDER_ID}
 
 ocr:
   language: deu+eng
@@ -26,6 +26,12 @@ ocr:
 thumbnail:
   cache:
     directory: ${THUMBNAIL_CACHE_DIR:./cache/thumbnails}
+
+drive-organizer:
+  ai:
+    base-url: ${AI_BASE_URL}
+    api-key: ${AI_API_KEY}
+    model: ${AI_MODEL}
 
 server:
   port : 8081

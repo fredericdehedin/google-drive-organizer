@@ -27,12 +27,12 @@ public class GoogleDriveFileRepository implements FileRepository {
     }
 
     @Override
-    public List<DriveFile> getFilesInCheckInFolder() {
+    public List<DriveFile> getFilesInRootFolder() {
         try {
             String query = """
                     '%s' in parents and trashed=false and mimeType!='%s'
-                    """.formatted(driveConfig.checkInFolderId(), FOLDER_MIME_TYPE).strip();
-            
+                    """.formatted(driveConfig.rootFolderId(), FOLDER_MIME_TYPE).strip();
+
             FileList result = driveProvider.getObject().files().list()
                     .setQ(query)
                     .setFields("files(id, name, mimeType, iconLink, thumbnailLink)")

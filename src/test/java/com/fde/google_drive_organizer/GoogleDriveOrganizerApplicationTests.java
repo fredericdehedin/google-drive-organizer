@@ -6,7 +6,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-	"drive.check-in-folder-id=test-folder-id"
+	"drive.root-folder-id=test-folder-id"
 })
 class GoogleDriveOrganizerApplicationTests {
 

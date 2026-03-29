@@ -1,8 +1,9 @@
-package com.fde.google_drive_organizer.application.usecase;
+package com.fde.google_drive_organizer.application.services;
 
 import com.fde.google_drive_organizer.application.port.outbound.DocumentContentRepository;
 import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
+import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,21 +16,24 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ExtractDocumentContentUCTest {
+class ExtractDocumentContentServiceTest {
 
     @Mock
     private DocumentContentRepository documentContentRepository;
 
     @InjectMocks
-    private ExtractDocumentContentUC extractDocumentContentUC;
+    private ExtractDocumentContentService extractDocumentContentService;
 
     @Test
     void shouldReturnDocumentContentWhenExtractionSucceeds() {
         String fileId = "test-file-id";
-        DocumentContent expectedContent = new DocumentContent(fileId, "Extracted text content");
+        DocumentContent expectedContent = DocumentContentTestFixture.aDocumentContent()
+                .withFileId(fileId)
+                .withTextContent("Extracted text content")
+                .build();
         when(documentContentRepository.extractContent(fileId)).thenReturn(expectedContent);
 
-        DocumentContent result = extractDocumentContentUC.extract(fileId);
+        DocumentContent result = extractDocumentContentService.extract(fileId);
 
         assertThat(result).isEqualTo(expectedContent);
         verify(documentContentRepository).extractContent(fileId);
@@ -41,7 +45,7 @@ class ExtractDocumentContentUCTest {
         when(documentContentRepository.extractContent(fileId))
                 .thenThrow(new DocumentContentExtractionException(fileId, "Failed to extract content"));
 
-        assertThatThrownBy(() -> extractDocumentContentUC.extract(fileId))
+        assertThatThrownBy(() -> extractDocumentContentService.extract(fileId))
                 .isInstanceOf(DocumentContentExtractionException.class)
                 .hasMessageContaining("Failed to extract content");
         verify(documentContentRepository).extractContent(fileId);

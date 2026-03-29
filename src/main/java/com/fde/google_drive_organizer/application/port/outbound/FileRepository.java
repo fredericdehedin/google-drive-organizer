@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FileRepository {
 
-    List<DriveFile> getFilesInCheckInFolder();
+    List<DriveFile> getFilesInRootFolder();
 }
