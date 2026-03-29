@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GoogleDriveFileRepositoryTest {
 
-    private static final String CHECK_IN_FOLDER_ID = "test-folder-id";
+    private static final String ROOT_FOLDER_ID = "test-folder-id";
 
     @Mock
     private ObjectProvider<Drive> driveProvider;
@@ -35,7 +35,7 @@ class GoogleDriveFileRepositoryTest {
     @BeforeEach
     void setUp() {
         when(driveProvider.getObject()).thenReturn(drive);
-        DriveConfig config = new DriveConfig(CHECK_IN_FOLDER_ID);
+        DriveConfig config = new DriveConfig(ROOT_FOLDER_ID);
         repository = new GoogleDriveFileRepository(driveProvider, config);
     }
 
@@ -68,7 +68,7 @@ class GoogleDriveFileRepositoryTest {
         when(listRequest.setPageSize(30)).thenReturn(listRequest);
         when(listRequest.execute()).thenReturn(fileList);
 
-        List<DriveFile> result = repository.getFilesInCheckInFolder();
+        List<DriveFile> result = repository.getFilesInRootFolder();
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).id()).isEqualTo("file1");
@@ -89,7 +89,7 @@ class GoogleDriveFileRepositoryTest {
         when(listRequest.setPageSize(30)).thenReturn(listRequest);
         when(listRequest.execute()).thenThrow(new IOException("API error"));
 
-        assertThatThrownBy(() -> repository.getFilesInCheckInFolder())
+        assertThatThrownBy(() -> repository.getFilesInRootFolder())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Failed to list files from Google Drive")
                 .hasCauseInstanceOf(IOException.class);

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DriveConfigTest.TestConfig.class)
 @TestPropertySource(properties = {
-        "drive.check-in-folder-id=test-folder-123"
+        "drive.root-folder-id=test-folder-123"
 })
 class DriveConfigTest {
 
@@ -24,7 +24,7 @@ class DriveConfigTest {
     private DriveConfig config;
 
     @Test
-    void shouldBindCheckInFolderIdProperty() {
-        assertThat(config.checkInFolderId()).isEqualTo("test-folder-123");
+    void shouldBindRootFolderIdProperty() {
+        assertThat(config.rootFolderId()).isEqualTo("test-folder-123");
     }
 }

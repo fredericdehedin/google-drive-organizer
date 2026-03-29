@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.application.usecase;
 
-import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
+import com.fde.google_drive_organizer.domain.model.DriveFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,20 +20,20 @@ class ListDriveFilesUCTest {
     @Mock
     private FileRepository fileRepository;
 
-    private ListDriveFilesUC useCase;
+    private ListRootFolderDriveFilesUC useCase;
 
     @BeforeEach
     void setUp() {
-        useCase = new ListDriveFilesUC(fileRepository);
+        useCase = new ListRootFolderDriveFilesUC(fileRepository);
     }
 
     @Test
-    void shouldReturnFilesFromCheckInFolder() {
+    void shouldReturnFilesFromRootFolder() {
         DriveFile file1 = aDriveFile().withId("id1").withName("file1.txt").build();
         DriveFile file2 = aDriveFile().withId("id2").withName("file2.txt").build();
         List<DriveFile> expectedFiles = List.of(file1, file2);
 
-        when(fileRepository.getFilesInCheckInFolder()).thenReturn(expectedFiles);
+        when(fileRepository.getFilesInRootFolder()).thenReturn(expectedFiles);
 
         List<DriveFile> actualFiles = useCase.list();
 
@@ -41,8 +41,8 @@ class ListDriveFilesUCTest {
     }
 
     @Test
-    void shouldReturnEmptyListWhenNoFilesInCheckInFolder() {
-        when(fileRepository.getFilesInCheckInFolder()).thenReturn(List.of());
+    void shouldReturnEmptyListWhenNoFilesInRootFolder() {
+        when(fileRepository.getFilesInRootFolder()).thenReturn(List.of());
 
         List<DriveFile> actualFiles = useCase.list();
 
