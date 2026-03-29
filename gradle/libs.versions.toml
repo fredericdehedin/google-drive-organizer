@@ -2,7 +2,7 @@
 spring-boot = "4.0.2"
 htmx-webjars = "2.0.8"
 google-api-client = "2.8.1"
-google-oauth-client = "1.36.0"
+google-oauth-client = "1.39.0"
 google-drive = "v3-rev197-1.25.0"
 pdfbox = "3.0.2"
 tess4j = "5.12.0"
