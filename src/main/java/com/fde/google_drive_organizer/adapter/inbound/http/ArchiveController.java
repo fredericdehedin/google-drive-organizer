@@ -41,8 +41,8 @@ public class ArchiveController {
     public SseEmitter archiveProgress(@PathVariable String fileId) throws IOException {
         //TODO: move out of the controller..
         SseEmitter emitter = new SseEmitter(5 * 60 * 1000L);
-        publisher.subscribe(new FileId(fileId), emitter);
         emitter.send(SseEmitter.event().comment("connected"));
+        publisher.subscribe(new FileId(fileId), emitter);
         return emitter;
     }
 }
