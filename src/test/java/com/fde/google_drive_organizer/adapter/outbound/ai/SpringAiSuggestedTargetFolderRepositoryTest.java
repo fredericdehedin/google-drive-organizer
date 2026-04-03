@@ -4,7 +4,7 @@ import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
     private ChatModel chatModel;
 
     @Mock
-    private ProgressEventPublisher publisher;
+    private SuggestTargetFolderProgressPublisher publisher;
 
     private SpringAiSuggestedTargetFolderRepository repository;
 

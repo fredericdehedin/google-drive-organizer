@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,7 +17,7 @@ class AiConfigurationTest {
     private final AiConfiguration aiConfiguration = new AiConfiguration();
 
     @Mock
-    private ProgressEventPublisher publisher;
+    private SuggestTargetFolderProgressPublisher publisher;
 
     private final DriveOrganizerAiConfig config = new DriveOrganizerAiConfig(
             "https://api.example.com",

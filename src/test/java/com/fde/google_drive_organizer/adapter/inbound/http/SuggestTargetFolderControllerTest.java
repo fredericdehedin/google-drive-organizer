@@ -2,7 +2,7 @@ package com.fde.google_drive_organizer.adapter.inbound.http;
 
 import com.fde.google_drive_organizer.application.port.inbound.SuggestTargetFolderService;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SuggestTargetFolderControllerTest {
 
     private final SuggestTargetFolderService suggestTargetFolderService = mock(SuggestTargetFolderService.class);
-    private final ProgressEventPublisher publisher = mock(ProgressEventPublisher.class);
+    private final SuggestTargetFolderProgressPublisher publisher = mock(SuggestTargetFolderProgressPublisher.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
             .standaloneSetup(new SuggestTargetFolderController(suggestTargetFolderService, publisher))

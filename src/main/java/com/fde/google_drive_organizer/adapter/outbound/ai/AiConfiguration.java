@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.model.ApiKey;
 import org.springframework.ai.model.SimpleApiKey;
@@ -38,7 +38,7 @@ public class AiConfiguration {
             ChatModel chatModel,
             DriveOrganizerAiConfig config,
             ResourceLoader resourceLoader,
-            ProgressEventPublisher publisher
+            SuggestTargetFolderProgressPublisher publisher
     ) {
         return new SpringAiSuggestedTargetFolderRepository(chatModel, config, resourceLoader, publisher);
     }

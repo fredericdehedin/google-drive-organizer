@@ -1,10 +1,10 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.adapter.outbound.tika.DocumentParser;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
 import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.progress.FileId;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
 import com.google.api.services.drive.Drive;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ class GoogleDriveDocumentContentRepositoryTest {
     private DocumentParser ocrParser;
 
     @Mock
-    private ProgressEventPublisher publisher;
+    private SuggestTargetFolderProgressPublisher publisher;
 
     private GoogleDriveDocumentContentRepository repository;
 
@@ -72,8 +72,8 @@ class GoogleDriveDocumentContentRepositoryTest {
         assertThat(result.fileId()).isEqualTo(FILE_ID);
         assertThat(result.textContent()).isEqualTo("Extracted text content");
         verifyNoInteractions(ocrParser);
-        verify(publisher).publish(new FileId(FILE_ID), ProgressStep.DOWNLOADING, "Downloading file...");
-        verify(publisher).publish(new FileId(FILE_ID), ProgressStep.EXTRACTING_TEXT, "Extracting text...");
+        verify(publisher).publish(new DriveFileId(FILE_ID), ProgressStep.DOWNLOADING, "Downloading file...");
+        verify(publisher).publish(new DriveFileId(FILE_ID), ProgressStep.EXTRACTING_TEXT, "Extracting text...");
     }
 
     @Test
@@ -89,7 +89,7 @@ class GoogleDriveDocumentContentRepositoryTest {
 
         assertThat(result.fileId()).isEqualTo(FILE_ID);
         assertThat(result.textContent()).isEqualTo("OCR extracted text");
-        verify(publisher).publish(new FileId(FILE_ID), ProgressStep.OCR, "Running OCR...");
+        verify(publisher).publish(new DriveFileId(FILE_ID), ProgressStep.OCR, "Running OCR...");
     }
 
     @Test
@@ -105,7 +105,7 @@ class GoogleDriveDocumentContentRepositoryTest {
 
         assertThat(result.fileId()).isEqualTo(FILE_ID);
         assertThat(result.textContent()).isEqualTo("OCR extracted text");
-        verify(publisher).publish(new FileId(FILE_ID), ProgressStep.OCR, "Running OCR...");
+        verify(publisher).publish(new DriveFileId(FILE_ID), ProgressStep.OCR, "Running OCR...");
     }
 
     @Test

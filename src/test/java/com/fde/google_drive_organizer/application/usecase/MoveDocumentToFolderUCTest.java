@@ -3,13 +3,12 @@ package com.fde.google_drive_organizer.application.usecase;
 import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_folder.DriveTargetFolderTestFixture;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
-import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
-import com.fde.google_drive_organizer.progress.FileId;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
-import com.fde.google_drive_organizer.progress.TargetFolder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +28,7 @@ class SuggestTargetFolderUCTest {
     private SuggestedTargetFolderRepository suggestedTargetFolderRepository;
 
     @Mock
-    private ProgressEventPublisher publisher;
+    private SuggestTargetFolderProgressPublisher publisher;
 
     @InjectMocks
     private SuggestTargetFolderUC suggestTargetFolderUC;
@@ -51,6 +50,8 @@ class SuggestTargetFolderUCTest {
 
         verify(extractDocumentContent).extract("file-123");
         verify(suggestedTargetFolderRepository).suggestTargetFolder(driveFileRef, content);
-        verify(publisher).publish(new FileId("file-123"), ProgressStep.DONE, "Archive complete", new TargetFolder("Taxes/2025/02_Income"));
+        verify(publisher).publish(driveFileRef.id(), ProgressStep.DONE, "Archive complete", DriveTargetFolderTestFixture.aDriveTargetFolder()
+                .withName("Taxes/2025/02_Income")
+                .build());
     }
 }

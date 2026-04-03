@@ -1,42 +1,37 @@
 package com.fde.google_drive_organizer.progress;
 
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.drive_folder.DriveTargetFolder;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.Instant;
-import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * Backwards-compatible adapter.
+ *
+ * @deprecated use {@link SuggestTargetFolderProgressPublisher}
+ */
+@Deprecated
 @Component
+@Primary
 public class ProgressEventPublisher {
 
-    private final ConcurrentHashMap<FileId, ProgressSubscribers> subscribers = new ConcurrentHashMap<>();
+    private final SuggestTargetFolderProgressPublisher delegate;
 
-    public void subscribe(FileId fileId, SseEmitter emitter) {
-        ProgressSubscribers subs = subscribers.computeIfAbsent(fileId, id -> new ProgressSubscribers());
-        subs.add(emitter);
-        emitter.onCompletion(() -> unsubscribe(fileId, emitter));
-        emitter.onTimeout(() -> unsubscribe(fileId, emitter));
-        emitter.onError(e -> unsubscribe(fileId, emitter));
+    public ProgressEventPublisher(SuggestTargetFolderProgressPublisher delegate) {
+        this.delegate = delegate;
     }
 
-    public void publish(FileId fileId, ProgressStep step, String message) {
-        publish(fileId, step, message, new TargetFolder(null));
+    public void subscribe(DriveFileId driveFileId, SseEmitter emitter) {
+        delegate.subscribe(driveFileId, emitter);
     }
 
-    public void publish(FileId fileId, ProgressStep step, String message, TargetFolder targetFolder) {
-        ProgressSubscribers subs = subscribers.get(fileId);
-        if (subs != null) {
-            subs.broadcast(new ProgressEvent(fileId, step, message, targetFolder, Instant.now()));
-        }
+    public void publish(DriveFileId driveFileId, ProgressStep step, String message) {
+        delegate.publish(driveFileId, step, message);
     }
 
-    private void unsubscribe(FileId fileId, SseEmitter emitter) {
-        ProgressSubscribers subs = subscribers.get(fileId);
-        if (subs != null) {
-            subs.remove(emitter);
-            if (subs.isEmpty()) {
-                subscribers.remove(fileId);
-            }
-        }
+    public void publish(DriveFileId driveFileId, ProgressStep step, String message, DriveTargetFolder targetFolder) {
+        delegate.publish(driveFileId, step, message, targetFolder);
     }
 }

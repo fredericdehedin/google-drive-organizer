@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.progress.FileId;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,9 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SuggestTargetFolderProgressControllerTest {
 
     // Completes the emitter immediately so async dispatch can finish in the test.
-    private final ProgressEventPublisher publisher = new ProgressEventPublisher() {
+    private final SuggestTargetFolderProgressPublisher publisher = new SuggestTargetFolderProgressPublisher() {
         @Override
-        public void subscribe(FileId fileId, SseEmitter emitter) {
+        public void subscribe(DriveFileId driveFileId, SseEmitter emitter) {
             emitter.complete();
         }
     };

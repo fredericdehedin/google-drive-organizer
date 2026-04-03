@@ -3,8 +3,7 @@ package com.fde.google_drive_organizer.adapter.outbound.ai;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.progress.FileId;
-import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.core.io.Resource;
@@ -19,9 +18,9 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
     private final ChatModel chatModel;
     private final DriveOrganizerAiConfig config;
     private final ResourceLoader resourceLoader;
-    private final ProgressEventPublisher publisher;
+    private final SuggestTargetFolderProgressPublisher publisher;
 
-    public SpringAiSuggestedTargetFolderRepository(ChatModel chatModel, DriveOrganizerAiConfig config, ResourceLoader resourceLoader, ProgressEventPublisher publisher) {
+    public SpringAiSuggestedTargetFolderRepository(ChatModel chatModel, DriveOrganizerAiConfig config, ResourceLoader resourceLoader, SuggestTargetFolderProgressPublisher publisher) {
         this.chatModel = chatModel;
         this.config = config;
         this.resourceLoader = resourceLoader;
@@ -36,7 +35,7 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
                 .replace("{file}", driveFileRef.name().value())
                 .replace("{content}", content.textContent())
                 .replace("{folder-structure}", folderStructure);
-        publisher.publish(new FileId(driveFileRef.id().value()), ProgressStep.ANALYZING, "Analyzing with AI...");
+        publisher.publish(driveFileRef.id(), ProgressStep.ANALYZING, "Analyzing with AI...");
         return chatModel.call(prompt).trim();
     }
 

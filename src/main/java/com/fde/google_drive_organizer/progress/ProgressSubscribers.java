@@ -8,25 +8,25 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-class ProgressSubscribers {
+public class ProgressSubscribers {
 
     private static final Logger log = LoggerFactory.getLogger(ProgressSubscribers.class);
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
-    void add(SseEmitter emitter) {
+    public void add(SseEmitter emitter) {
         emitters.add(emitter);
     }
 
-    void remove(SseEmitter emitter) {
+    public void remove(SseEmitter emitter) {
         emitters.remove(emitter);
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return emitters.isEmpty();
     }
 
-    void broadcast(ProgressEvent event) {
+    public void broadcast(ProgressEvent event) {
         String data = toJson(event);
         boolean terminal = event.step() == ProgressStep.DONE || event.step() == ProgressStep.FAILED;
         for (SseEmitter emitter : emitters) {
@@ -48,8 +48,8 @@ class ProgressSubscribers {
                 .replace("\"", "\\\"");
         StringBuilder json = new StringBuilder("{\"step\":\"").append(event.step().name())
                 .append("\",\"message\":\"").append(message).append("\"");
-        if (event.targetFolder().value() != null) {
-            String folder = event.targetFolder().value()
+        if (event.targetFolder().name().value() != null) {
+            String folder = event.targetFolder().name().value()
                     .replace("\\", "\\\\")
                     .replace("\"", "\\\"");
             json.append(",\"targetFolder\":\"").append(folder).append("\"");
