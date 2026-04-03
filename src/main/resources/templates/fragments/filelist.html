@@ -4,7 +4,31 @@
 <div th:fragment="filelist">
     <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
         <div class="file-grid">
-            <article class="file-card" th:each="file : ${driveFiles}">
+            <article class="file-card" th:each="file : ${driveFiles}"
+                     x-data="archiveProgress()"
+                     th:data-file-id="${file.id()}"
+                     th:data-file-name="${file.name()}">
+                <div x-show="isOpen" x-cloak class="archive-overlay" x-transition>
+                    <article class="archive-overlay-panel">
+                        <header>Archiving file...</header>
+                        <ul class="archive-step-list">
+                            <template x-for="s in steps" :key="s.step">
+                                <li class="archive-step-row">
+                                    <span class="step-icon"
+                                          :class="{ 'step-icon--done': s.status === 'done', 'step-icon--failed': s.status === 'failed' }">
+                                        <span x-show="s.status === 'running'" class="step-spinner" aria-hidden="true"></span>
+                                        <span x-show="s.status === 'done'"    aria-hidden="true">&#10003;</span>
+                                        <span x-show="s.status === 'failed'"  aria-hidden="true">&#10007;</span>
+                                    </span>
+                                    <span class="step-message" x-text="s.message"></span>
+                                </li>
+                            </template>
+                        </ul>
+                        <footer x-show="isTerminal">
+                            <button type="button" class="secondary" @click="closeOverlay()">Close</button>
+                        </footer>
+                    </article>
+                </div>
                 <header class="file-card-header">
                     <img th:src="${file.iconLink()}"
                          th:alt="'Icon for ' + ${file.name()}"
@@ -23,23 +47,12 @@
                          th:alt="'Icon for ' + ${file.name()}"
                          class="file-icon-large">
                 </div>
-                <footer class="file-card-footer"
-                        x-data="archiveProgress()"
-                        th:data-file-id="${file.id()}"
-                        th:data-file-name="${file.name()}">
+                <footer class="file-card-footer">
                     <button type="button" class="archive-button"
-                            :disabled="isOpen"
+                            :disabled="isOpen && !isTerminal"
                             @click="startArchive($el.closest('[data-file-id]').dataset.fileId, $el.closest('[data-file-name]').dataset.fileName)">
                         Archive
                     </button>
-                    <div x-show="isOpen" class="archive-status" x-cloak>
-                        <span class="progress-dot" :class="{ 'progress-dot--done': currentStep === 'DONE', 'progress-dot--failed': currentStep === 'FAILED' }"></span>
-                        <span x-text="message"
-                              x-transition:enter="status-enter"
-                              x-transition:enter-start="status-enter-start"
-                              x-transition:enter-end="status-enter-end"
-                              class="archive-status-message"></span>
-                    </div>
                 </footer>
             </article>
         </div>
@@ -51,47 +64,57 @@
         function archiveProgress() {
             return {
                 isOpen: false,
-                currentStep: '',
-                message: '',
+                steps: [],
                 eventSource: null,
-                startArchive(fileId, fileName) {
-                    this.isOpen = true;
-                    this.message = 'Connecting...';
-                    this.currentStep = '';
 
+                get isTerminal() {
+                    const last = this.steps[this.steps.length - 1];
+                    return last && (last.status === 'done' || last.status === 'failed');
+                },
+
+                closeOverlay() {
+                    this.isOpen = false;
+                    this.steps = [];
+                },
+
+                startArchive(fileId, fileName) {
+                    this.steps = [];
+                    this.isOpen = true;
                     this.eventSource = new EventSource('/api/files/' + fileId + '/archive/progress');
 
                     this.eventSource.addEventListener('progress', (e) => {
                         const data = JSON.parse(e.data);
-                        this.currentStep = data.step;
-                        this.message = data.message;
+                        const prev = this.steps[this.steps.length - 1];
+                        if (prev && prev.status === 'running') {
+                            prev.status = data.step === 'FAILED' ? 'failed' : 'done';
+                        }
+                        if (data.step !== 'DONE') {
+                            this.steps.push({ step: data.step, message: data.message, status: 'running' });
+                        }
                         if (data.step === 'DONE' || data.step === 'FAILED') {
                             this.eventSource.close();
+                            if (data.step === 'DONE') setTimeout(() => this.closeOverlay(), 2000);
                         }
                     });
 
                     this.eventSource.onopen = () => {
                         fetch('/api/files/' + fileId + '/archive?fileName=' + encodeURIComponent(fileName))
                             .then(response => {
-                                if (!response.ok) {
-                                    this.currentStep = 'FAILED';
-                                    this.message = 'Archive failed';
-                                    this.eventSource.close();
-                                }
+                                if (!response.ok) this._handleError('Archive request failed');
                             })
-                            .catch(() => {
-                                this.currentStep = 'FAILED';
-                                this.message = 'Archive failed';
-                                this.eventSource.close();
-                            });
+                            .catch(() => this._handleError('Network error'));
                     };
 
                     this.eventSource.onerror = () => {
-                        if (this.currentStep !== 'DONE' && this.currentStep !== 'FAILED') {
-                            this.currentStep = 'FAILED';
-                            this.message = 'Connection error';
-                        }
+                        if (!this.isTerminal) this._handleError('Connection error');
                     };
+                },
+
+                _handleError(msg) {
+                    const prev = this.steps[this.steps.length - 1];
+                    if (prev && prev.status === 'running') prev.status = 'failed';
+                    this.steps.push({ step: 'FAILED', message: msg, status: 'failed' });
+                    if (this.eventSource) this.eventSource.close();
                 }
             };
         }

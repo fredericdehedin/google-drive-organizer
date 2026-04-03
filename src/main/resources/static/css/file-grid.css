@@ -12,6 +12,7 @@
     transition: box-shadow 0.2s;
     cursor: pointer;
     background-color: var(--pico-card-background-color);
+    position: relative;
 }
 
 .file-card:hover {
@@ -82,53 +83,87 @@
     font-size: 0.85rem;
 }
 
-/* Archive progress status */
+/* Archive progress overlay */
 [x-cloak] {
     display: none !important;
 }
 
-.archive-status {
+.archive-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--pico-muted-color);
+    justify-content: center;
+    padding: 0.75rem;
+    background: color-mix(in srgb, var(--pico-card-background-color) 92%, transparent);
+    backdrop-filter: blur(2px);
+    border-radius: var(--pico-border-radius);
 }
 
-.archive-status-message {
+.archive-overlay-panel {
+    width: 100%;
+    margin: 0;
+    padding: 0.75rem;
+}
+
+.archive-overlay-panel > header,
+.archive-overlay-panel > footer {
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.archive-step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.archive-step-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+}
+
+.step-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+}
+
+.step-icon--done   { color: var(--pico-ins-color, #4caf50); }
+.step-icon--failed { color: var(--pico-del-color, #f44336); }
+
+.step-spinner {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid var(--pico-muted-border-color);
+    border-top-color: var(--pico-primary);
+    border-radius: 50%;
+    animation: step-spin 0.8s linear infinite;
+}
+
+@keyframes step-spin {
+    to { transform: rotate(360deg); }
+}
+
+.step-message {
+    flex: 1;
+    color: var(--pico-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-.progress-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--pico-primary);
-    flex-shrink: 0;
-    animation: pulse 1.2s ease-in-out infinite;
-}
-
-.progress-dot--done {
-    background-color: var(--pico-ins-color, #4caf50);
-    animation: none;
-}
-
-.progress-dot--failed {
-    background-color: var(--pico-del-color, #f44336);
-    animation: none;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.4; transform: scale(0.75); }
-}
-
-.status-enter { transition: opacity 0.2s ease, transform 0.2s ease; }
-.status-enter-start { opacity: 0; transform: translateY(-4px); }
-.status-enter-end   { opacity: 1; transform: translateY(0); }
 
 /* Responsive Design */
 @media (max-width: 768px) {
