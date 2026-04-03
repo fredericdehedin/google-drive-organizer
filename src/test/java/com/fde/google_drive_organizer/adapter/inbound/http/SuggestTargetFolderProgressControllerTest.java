@@ -1,6 +1,5 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,7 +24,7 @@ class SuggestTargetFolderProgressControllerTest {
     };
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new SuggestTargetFolderController(mock(MoveDocumentToFolder.class), publisher))
+            .standaloneSetup(new SuggestTargetFolderProgressController(publisher))
             .build();
 
     @Test

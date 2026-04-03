@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
-import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
+import com.fde.google_drive_organizer.application.port.inbound.SuggestTargetFolderService;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.Test;
@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class SuggestTargetFolderControllerTest {
 
-    private final MoveDocumentToFolder moveDocumentToFolder = mock(MoveDocumentToFolder.class);
+    private final SuggestTargetFolderService suggestTargetFolderService = mock(SuggestTargetFolderService.class);
     private final ProgressEventPublisher publisher = mock(ProgressEventPublisher.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new SuggestTargetFolderController(moveDocumentToFolder, publisher))
+            .standaloneSetup(new SuggestTargetFolderController(suggestTargetFolderService, publisher))
             .build();
 
     @Test
@@ -29,7 +29,7 @@ class SuggestTargetFolderControllerTest {
                         .param("fileName", "invoice.pdf"))
                 .andExpect(status().isOk());
 
-        verify(moveDocumentToFolder).move(DriveFileTestFixture.aDriveFileRef()
+        verify(suggestTargetFolderService).suggestTargetFolder(DriveFileTestFixture.aDriveFileRef()
                 .withId("test-file-id")
                 .withName("invoice.pdf")
                 .build());

@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.application.usecase;
 
 import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
-import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
+import com.fde.google_drive_organizer.application.port.inbound.SuggestTargetFolderService;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
@@ -14,15 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MoveDocumentToFolderUC implements MoveDocumentToFolder {
+public class SuggestTargetFolderUC implements SuggestTargetFolderService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MoveDocumentToFolderUC.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SuggestTargetFolderUC.class);
 
     private final ExtractDocumentContent extractDocumentContent;
     private final SuggestedTargetFolderRepository suggestedTargetFolderRepository;
     private final ProgressEventPublisher publisher;
 
-    public MoveDocumentToFolderUC(
+    public SuggestTargetFolderUC(
             ExtractDocumentContent extractDocumentContent,
             SuggestedTargetFolderRepository suggestedTargetFolderRepository,
             ProgressEventPublisher publisher
@@ -33,7 +33,7 @@ public class MoveDocumentToFolderUC implements MoveDocumentToFolder {
     }
 
     @Override
-    public void move(DriveFileRef driveFileRef) {
+    public void suggestTargetFolder(DriveFileRef driveFileRef) {
         FileId fileId = new FileId(driveFileRef.id().value());
         try {
             DocumentContent content = extractDocumentContent.extract(driveFileRef.id().value());

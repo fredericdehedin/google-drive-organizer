@@ -2,6 +2,7 @@ package com.fde.google_drive_organizer.domain.model;
 
 import org.junit.jupiter.api.Test;
 
+import static com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture.aDocumentContent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -9,7 +10,10 @@ class DocumentContentTest {
 
     @Test
     void shouldCreateDocumentContentWithValidData() {
-        DocumentContent documentContent = new DocumentContent("file-123", "Sample text content");
+        DocumentContent documentContent = aDocumentContent()
+                .withFileId("file-123")
+                .withTextContent("Sample text content")
+                .build();
 
         assertThat(documentContent.fileId()).isEqualTo("file-123");
         assertThat(documentContent.textContent()).isEqualTo("Sample text content");
@@ -17,7 +21,10 @@ class DocumentContentTest {
 
     @Test
     void shouldCreateDocumentContentWithEmptyTextContent() {
-        DocumentContent documentContent = new DocumentContent("file-123", "");
+        DocumentContent documentContent = aDocumentContent()
+                .withFileId("file-123")
+                .withTextContent("")
+                .build();
 
         assertThat(documentContent.fileId()).isEqualTo("file-123");
         assertThat(documentContent.textContent()).isEmpty();

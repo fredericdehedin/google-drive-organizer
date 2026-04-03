@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class MoveDocumentToFolderUCTest {
+class SuggestTargetFolderUCTest {
 
     @Mock
     private ExtractDocumentContent extractDocumentContent;
@@ -32,7 +32,7 @@ class MoveDocumentToFolderUCTest {
     private ProgressEventPublisher publisher;
 
     @InjectMocks
-    private MoveDocumentToFolderUC moveDocumentToFolderUC;
+    private SuggestTargetFolderUC suggestTargetFolderUC;
 
     @Test
     void shouldExtractContentAndPrintSuggestedFolder() {
@@ -47,7 +47,7 @@ class MoveDocumentToFolderUCTest {
         when(extractDocumentContent.extract("file-123")).thenReturn(content);
         when(suggestedTargetFolderRepository.suggestTargetFolder(driveFileRef, content)).thenReturn("Taxes/2025/02_Income");
 
-        moveDocumentToFolderUC.move(driveFileRef);
+        suggestTargetFolderUC.suggestTargetFolder(driveFileRef);
 
         verify(extractDocumentContent).extract("file-123");
         verify(suggestedTargetFolderRepository).suggestTargetFolder(driveFileRef, content);
