@@ -6,6 +6,7 @@ import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
 import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,9 @@ class MoveDocumentToFolderUCTest {
 
     @Mock
     private SuggestedTargetFolderRepository suggestedTargetFolderRepository;
+
+    @Mock
+    private ProgressEventPublisher publisher;
 
     @InjectMocks
     private MoveDocumentToFolderUC moveDocumentToFolderUC;

@@ -3,6 +3,7 @@
     <option name="ACTIVE_PROFILES" value="local" />
     <option name="MAIN_CLASS_NAME" value="com.fde.google_drive_organizer.GoogleDriveOrganizerApplication" />
     <module name="google-drive-organizer.main" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.fde.google_drive_organizer.GoogleDriveOrganizerApplication" />
     <option name="VM_PARAMETERS" value="--enable-native-access=ALL-UNNAMED" />
     <method v="2">

@@ -3,6 +3,9 @@ package com.fde.google_drive_organizer.adapter.outbound.ai;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.progress.FileId;
+import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
+import com.fde.google_drive_organizer.progress.ProgressStep;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -16,11 +19,13 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
     private final ChatModel chatModel;
     private final DriveOrganizerAiConfig config;
     private final ResourceLoader resourceLoader;
+    private final ProgressEventPublisher publisher;
 
-    public SpringAiSuggestedTargetFolderRepository(ChatModel chatModel, DriveOrganizerAiConfig config, ResourceLoader resourceLoader) {
+    public SpringAiSuggestedTargetFolderRepository(ChatModel chatModel, DriveOrganizerAiConfig config, ResourceLoader resourceLoader, ProgressEventPublisher publisher) {
         this.chatModel = chatModel;
         this.config = config;
         this.resourceLoader = resourceLoader;
+        this.publisher = publisher;
     }
 
     @Override
@@ -31,6 +36,7 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
                 .replace("{file}", driveFile.name())
                 .replace("{content}", content.textContent())
                 .replace("{folder-structure}", folderStructure);
+        publisher.publish(new FileId(driveFile.id()), ProgressStep.ANALYZING, "Analyzing with AI...");
         return chatModel.call(prompt).trim();
     }
 

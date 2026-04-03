@@ -28,3 +28,12 @@ jobs:
 
       - name: Run tests (excluding @Tag("integration"))
         run: ./gradlew test --parallel -DexcludeTags=integration
+
+      - name: Generate JaCoCo coverage report
+        run: ./gradlew jacocoTestReport
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html  # or 'build/reports/jacoco/' for all

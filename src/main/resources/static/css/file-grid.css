@@ -82,6 +82,54 @@
     font-size: 0.85rem;
 }
 
+/* Archive progress status */
+[x-cloak] {
+    display: none !important;
+}
+
+.archive-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--pico-muted-color);
+}
+
+.archive-status-message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--pico-primary);
+    flex-shrink: 0;
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+.progress-dot--done {
+    background-color: var(--pico-ins-color, #4caf50);
+    animation: none;
+}
+
+.progress-dot--failed {
+    background-color: var(--pico-del-color, #f44336);
+    animation: none;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
+.status-enter { transition: opacity 0.2s ease, transform 0.2s ease; }
+.status-enter-start { opacity: 0; transform: translateY(-4px); }
+.status-enter-end   { opacity: 1; transform: translateY(0); }
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .file-grid {

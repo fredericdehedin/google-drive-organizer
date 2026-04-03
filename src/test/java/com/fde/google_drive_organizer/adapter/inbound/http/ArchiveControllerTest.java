@@ -2,6 +2,7 @@ package com.fde.google_drive_organizer.adapter.inbound.http;
 
 import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
 import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,9 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ArchiveControllerTest {
 
     private final MoveDocumentToFolder moveDocumentToFolder = mock(MoveDocumentToFolder.class);
+    private final ProgressEventPublisher publisher = mock(ProgressEventPublisher.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new ArchiveController(moveDocumentToFolder))
+            .standaloneSetup(new ArchiveController(moveDocumentToFolder, publisher))
             .build();
 
     @Test

@@ -23,13 +23,23 @@
                          th:alt="'Icon for ' + ${file.name()}"
                          class="file-icon-large">
                 </div>
-                <footer class="file-card-footer">
+                <footer class="file-card-footer"
+                        x-data="archiveProgress()"
+                        th:data-file-id="${file.id()}"
+                        th:data-file-name="${file.name()}">
                     <button type="button" class="archive-button"
-                            th:data-file-id="${file.id()}"
-                            th:data-file-name="${file.name()}"
-                            onclick="archiveFile(this.dataset.fileId, this.dataset.fileName)">
+                            :disabled="isOpen"
+                            @click="startArchive($el.closest('[data-file-id]').dataset.fileId, $el.closest('[data-file-name]').dataset.fileName)">
                         Archive
                     </button>
+                    <div x-show="isOpen" class="archive-status" x-cloak>
+                        <span class="progress-dot" :class="{ 'progress-dot--done': currentStep === 'DONE', 'progress-dot--failed': currentStep === 'FAILED' }"></span>
+                        <span x-text="message"
+                              x-transition:enter="status-enter"
+                              x-transition:enter-start="status-enter-start"
+                              x-transition:enter-end="status-enter-end"
+                              class="archive-status-message"></span>
+                    </div>
                 </footer>
             </article>
         </div>
@@ -38,20 +48,52 @@
         <p>No files found in the configured folder.</p>
     </div>
     <script>
-        function archiveFile(fileId, fileName) {
-            fetch('/api/files/' + fileId + '/archive?fileName=' + encodeURIComponent(fileName), {
-                method: 'GET'
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Archive request successful for file: ' + fileId);
-                } else {
-                    console.error('Archive request failed for file: ' + fileId);
+        function archiveProgress() {
+            return {
+                isOpen: false,
+                currentStep: '',
+                message: '',
+                eventSource: null,
+                startArchive(fileId, fileName) {
+                    this.isOpen = true;
+                    this.message = 'Connecting...';
+                    this.currentStep = '';
+
+                    this.eventSource = new EventSource('/api/files/' + fileId + '/archive/progress');
+
+                    this.eventSource.addEventListener('progress', (e) => {
+                        const data = JSON.parse(e.data);
+                        this.currentStep = data.step;
+                        this.message = data.message;
+                        if (data.step === 'DONE' || data.step === 'FAILED') {
+                            this.eventSource.close();
+                        }
+                    });
+
+                    this.eventSource.onopen = () => {
+                        fetch('/api/files/' + fileId + '/archive?fileName=' + encodeURIComponent(fileName))
+                            .then(response => {
+                                if (!response.ok) {
+                                    this.currentStep = 'FAILED';
+                                    this.message = 'Archive failed';
+                                    this.eventSource.close();
+                                }
+                            })
+                            .catch(() => {
+                                this.currentStep = 'FAILED';
+                                this.message = 'Archive failed';
+                                this.eventSource.close();
+                            });
+                    };
+
+                    this.eventSource.onerror = () => {
+                        if (this.currentStep !== 'DONE' && this.currentStep !== 'FAILED') {
+                            this.currentStep = 'FAILED';
+                            this.message = 'Connection error';
+                        }
+                    };
                 }
-            })
-            .catch(error => {
-                console.error('Error archiving file: ' + fileId, error);
-            });
+            };
         }
     </script>
 </div>

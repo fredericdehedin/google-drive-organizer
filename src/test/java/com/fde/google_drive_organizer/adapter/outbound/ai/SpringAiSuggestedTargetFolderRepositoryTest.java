@@ -4,6 +4,7 @@ import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
 import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,9 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
     @Mock
     private ChatModel chatModel;
 
+    @Mock
+    private ProgressEventPublisher publisher;
+
     private SpringAiSuggestedTargetFolderRepository repository;
 
     @BeforeEach
@@ -34,7 +38,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
                 "classpath:prompts/test-suggest-target-folder-command.md",
                 "classpath:prompts/test-folder-structure.md"
         );
-        repository = new SpringAiSuggestedTargetFolderRepository(chatModel, config, new DefaultResourceLoader());
+        repository = new SpringAiSuggestedTargetFolderRepository(chatModel, config, new DefaultResourceLoader(), publisher);
     }
 
     @Test
