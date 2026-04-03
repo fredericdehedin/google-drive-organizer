@@ -3,8 +3,8 @@ package com.fde.google_drive_organizer.application.usecase;
 import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
@@ -33,12 +33,12 @@ public class MoveDocumentToFolderUC implements MoveDocumentToFolder {
     }
 
     @Override
-    public void move(DriveFile driveFile) {
-        FileId fileId = new FileId(driveFile.id());
+    public void move(DriveFileRef driveFileRef) {
+        FileId fileId = new FileId(driveFileRef.id().value());
         try {
-            DocumentContent content = extractDocumentContent.extract(driveFile.id());
-            String suggestedFolder = suggestedTargetFolderRepository.suggestTargetFolder(driveFile, content);
-            LOGGER.info("Suggested folder for '{}': {}", driveFile.name(), suggestedFolder);
+            DocumentContent content = extractDocumentContent.extract(driveFileRef.id().value());
+            String suggestedFolder = suggestedTargetFolderRepository.suggestTargetFolder(driveFileRef, content);
+            LOGGER.info("Suggested folder for '{}': {}", driveFileRef.name().value(), suggestedFolder);
             publisher.publish(fileId, ProgressStep.DONE, "Archive complete", new TargetFolder(suggestedFolder));
         } catch (Exception e) {
             publisher.publish(fileId, ProgressStep.FAILED, "Archive failed");

@@ -1,9 +1,33 @@
-package com.fde.google_drive_organizer.domain.model;
+package com.fde.google_drive_organizer.domain.drive_file;
 
+//TODO: move to testFixtures
 public class DriveFileTestFixture {
+
+    public static DriveFileRefBuilder aDriveFileRef() {
+        return new DriveFileRefBuilder();
+    }
 
     public static DriveFileBuilder aDriveFile() {
         return new DriveFileBuilder();
+    }
+
+    public static class DriveFileRefBuilder {
+        private String id = "default-id";
+        private String name = "default-file.txt";
+
+        public DriveFileRefBuilder withId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public DriveFileRefBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public DriveFileRef build() {
+            return new DriveFileRef(new DriveFileId(id), new DriveFileName(name));
+        }
     }
 
     public static class DriveFileBuilder {
@@ -39,7 +63,13 @@ public class DriveFileTestFixture {
         }
 
         public DriveFile build() {
-            return new DriveFile(id, name, mimeType, iconLink, thumbnailLink);
+            return new DriveFile(
+                    new DriveFileId(id),
+                    new DriveFileName(name),
+                    mimeType == null ? null : new DriveMimeType(mimeType),
+                    iconLink == null ? null : new DriveIconLink(iconLink),
+                    thumbnailLink == null ? null : new DriveThumbnailLink(thumbnailLink)
+            );
         }
     }
 }

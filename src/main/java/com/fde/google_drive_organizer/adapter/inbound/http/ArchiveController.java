@@ -1,7 +1,9 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
 import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileName;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
@@ -32,8 +34,8 @@ public class ArchiveController {
             @RequestParam String fileName
     ) {
         publisher.publish(new FileId(fileId), ProgressStep.STARTED, "Starting archive...");
-        DriveFile driveFile = new DriveFile(fileId, fileName, null, null, null);
-        moveDocumentToFolder.move(driveFile);
+        DriveFileRef driveFileRef = new DriveFileRef(new DriveFileId(fileId), new DriveFileName(fileName));
+        moveDocumentToFolder.move(driveFileRef);
         return ResponseEntity.ok().build();
     }
 

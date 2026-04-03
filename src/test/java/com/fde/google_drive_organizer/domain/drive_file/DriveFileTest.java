@@ -1,8 +1,8 @@
-package com.fde.google_drive_organizer.domain.model;
+package com.fde.google_drive_organizer.domain.drive_file;
 
 import org.junit.jupiter.api.Test;
 
-import static com.fde.google_drive_organizer.domain.model.DriveFileTestFixture.aDriveFile;
+import static com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture.aDriveFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -18,11 +18,11 @@ class DriveFileTest {
                 .withThumbnailLink("https://lh3.googleusercontent.com/thumbnail")
                 .build();
 
-        assertThat(driveFile.id()).isEqualTo("file-123");
-        assertThat(driveFile.name()).isEqualTo("document.pdf");
-        assertThat(driveFile.mimeType()).isEqualTo("application/pdf");
-        assertThat(driveFile.iconLink()).isEqualTo("https://drive-thirdparty.googleusercontent.com/16/type/application/pdf");
-        assertThat(driveFile.thumbnailLink()).isEqualTo("https://lh3.googleusercontent.com/thumbnail");
+        assertThat(driveFile.id()).isEqualTo(new DriveFileId("file-123"));
+        assertThat(driveFile.name()).isEqualTo(new DriveFileName("document.pdf"));
+        assertThat(driveFile.mimeType().value()).isEqualTo("application/pdf");
+        assertThat(driveFile.iconLink().value()).isEqualTo("https://drive-thirdparty.googleusercontent.com/16/type/application/pdf");
+        assertThat(driveFile.thumbnailLink().value()).isEqualTo("https://lh3.googleusercontent.com/thumbnail");
     }
 
     @Test
@@ -35,8 +35,8 @@ class DriveFileTest {
                 .withThumbnailLink(null)
                 .build();
 
-        assertThat(driveFile.id()).isEqualTo("file-456");
-        assertThat(driveFile.name()).isEqualTo("spreadsheet.xlsx");
+        assertThat(driveFile.id()).isEqualTo(new DriveFileId("file-456"));
+        assertThat(driveFile.name()).isEqualTo(new DriveFileName("spreadsheet.xlsx"));
         assertThat(driveFile.thumbnailLink()).isNull();
     }
 
@@ -44,28 +44,28 @@ class DriveFileTest {
     void shouldThrowExceptionWhenIdIsNull() {
         assertThatThrownBy(() -> aDriveFile().withId(null).build())
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("File id cannot be null or empty");
+                .hasMessage("Drive file id cannot be null or empty");
     }
 
     @Test
     void shouldThrowExceptionWhenIdIsBlank() {
         assertThatThrownBy(() -> aDriveFile().withId("  ").build())
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("File id cannot be null or empty");
+                .hasMessage("Drive file id cannot be null or empty");
     }
 
     @Test
     void shouldThrowExceptionWhenNameIsNull() {
         assertThatThrownBy(() -> aDriveFile().withName(null).build())
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("File name cannot be null or empty");
+                .hasMessage("Drive file name cannot be null or empty");
     }
 
     @Test
     void shouldThrowExceptionWhenNameIsBlank() {
         assertThatThrownBy(() -> aDriveFile().withName("  ").build())
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("File name cannot be null or empty");
+                .hasMessage("Drive file name cannot be null or empty");
     }
 
     @Test

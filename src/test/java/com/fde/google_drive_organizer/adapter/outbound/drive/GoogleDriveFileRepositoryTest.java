@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -71,10 +71,10 @@ class GoogleDriveFileRepositoryTest {
         List<DriveFile> result = repository.getFilesInRootFolder();
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).id()).isEqualTo("file1");
-        assertThat(result.get(0).name()).isEqualTo("Document.pdf");
-        assertThat(result.get(1).id()).isEqualTo("file2");
-        assertThat(result.get(1).name()).isEqualTo("Image.jpg");
+        assertThat(result.get(0).id().value()).isEqualTo("file1");
+        assertThat(result.get(0).name().value()).isEqualTo("Document.pdf");
+        assertThat(result.get(1).id().value()).isEqualTo("file2");
+        assertThat(result.get(1).name().value()).isEqualTo("Image.jpg");
     }
 
     @Test

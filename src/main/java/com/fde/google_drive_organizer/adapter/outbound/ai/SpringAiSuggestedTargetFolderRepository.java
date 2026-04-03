@@ -1,8 +1,8 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
@@ -29,14 +29,14 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
     }
 
     @Override
-    public String suggestTargetFolder(DriveFile driveFile, DocumentContent content) {
+    public String suggestTargetFolder(DriveFileRef driveFileRef, DocumentContent content) {
         String folderStructure = loadResource(config.folderStructurePromptPath());
         String commandTemplate = loadResource(config.commandPromptPath());
         String prompt = commandTemplate
-                .replace("{file}", driveFile.name())
+                .replace("{file}", driveFileRef.name().value())
                 .replace("{content}", content.textContent())
                 .replace("{folder-structure}", folderStructure);
-        publisher.publish(new FileId(driveFile.id()), ProgressStep.ANALYZING, "Analyzing with AI...");
+        publisher.publish(new FileId(driveFileRef.id().value()), ProgressStep.ANALYZING, "Analyzing with AI...");
         return chatModel.call(prompt).trim();
     }
 

@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
 import com.fde.google_drive_organizer.application.port.inbound.MoveDocumentToFolder;
-import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,12 +29,9 @@ class ArchiveControllerTest {
                         .param("fileName", "invoice.pdf"))
                 .andExpect(status().isOk());
 
-        verify(moveDocumentToFolder).move(DriveFileTestFixture.aDriveFile()
+        verify(moveDocumentToFolder).move(DriveFileTestFixture.aDriveFileRef()
                 .withId("test-file-id")
                 .withName("invoice.pdf")
-                .withMimeType(null)
-                .withIconLink(null)
-                .withThumbnailLink(null)
                 .build());
     }
 }

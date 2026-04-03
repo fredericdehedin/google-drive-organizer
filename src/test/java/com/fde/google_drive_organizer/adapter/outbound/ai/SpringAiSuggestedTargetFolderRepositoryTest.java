@@ -1,9 +1,9 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
-import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
 
     @Test
     void shouldSubstitutePlaceholdersAndCallChatModel() {
-        DriveFile driveFile = DriveFileTestFixture.aDriveFile()
+        DriveFileRef driveFileRef = DriveFileTestFixture.aDriveFileRef()
                 .withId("file-123")
                 .withName("salary-certificate-2025.pdf")
                 .build();
@@ -56,7 +56,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
                 "Folders: Taxes/2025/";
         when(chatModel.call(expectedPrompt)).thenReturn("Taxes/2025/02_Income");
 
-        String result = repository.suggestTargetFolder(driveFile, content);
+        String result = repository.suggestTargetFolder(driveFileRef, content);
 
         assertThat(result).isEqualTo("Taxes/2025/02_Income");
         verify(chatModel).call(expectedPrompt);
@@ -64,7 +64,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
 
     @Test
     void shouldTrimWhitespaceFromModelResponse() {
-        DriveFile driveFile = DriveFileTestFixture.aDriveFile()
+        DriveFileRef driveFileRef = DriveFileTestFixture.aDriveFileRef()
                 .withId("file-456")
                 .withName("bank-statement.pdf")
                 .build();
@@ -77,7 +77,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
                 "Folders: Taxes/2025/";
         when(chatModel.call(expectedPrompt)).thenReturn("  Taxes/2025/03_Assets  \n");
 
-        String result = repository.suggestTargetFolder(driveFile, content);
+        String result = repository.suggestTargetFolder(driveFileRef, content);
 
         assertThat(result).isEqualTo("Taxes/2025/03_Assets");
     }

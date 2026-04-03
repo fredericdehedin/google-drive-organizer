@@ -1,7 +1,12 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileName;
+import com.fde.google_drive_organizer.domain.drive_file.DriveIconLink;
+import com.fde.google_drive_organizer.domain.drive_file.DriveMimeType;
+import com.fde.google_drive_organizer.domain.drive_file.DriveThumbnailLink;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.beans.factory.ObjectProvider;
@@ -45,11 +50,11 @@ public class GoogleDriveFileRepository implements FileRepository {
 
             return result.getFiles().stream()
                     .map(file -> new DriveFile(
-                            file.getId(),
-                            file.getName(),
-                            file.getMimeType(),
-                            file.getIconLink(),
-                            file.getThumbnailLink()
+                            new DriveFileId(file.getId()),
+                            new DriveFileName(file.getName()),
+                            new DriveMimeType(file.getMimeType()),
+                            file.getIconLink() == null ? null : new DriveIconLink(file.getIconLink()),
+                            file.getThumbnailLink() == null ? null : new DriveThumbnailLink(file.getThumbnailLink())
                     ))
                     .toList();
 

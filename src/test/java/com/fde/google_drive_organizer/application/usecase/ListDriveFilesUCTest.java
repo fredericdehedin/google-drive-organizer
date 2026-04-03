@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.application.usecase;
 
 import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.fde.google_drive_organizer.domain.model.DriveFileTestFixture.aDriveFile;
+import static com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture.aDriveFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 

@@ -1,7 +1,7 @@
 package com.fde.google_drive_organizer.adapter.inbound.http;
 
 import com.fde.google_drive_organizer.application.port.inbound.ListDriveFiles;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

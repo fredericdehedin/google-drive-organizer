@@ -2,10 +2,10 @@ package com.fde.google_drive_organizer.application.usecase;
 
 import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.model.DocumentContent;
 import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
-import com.fde.google_drive_organizer.domain.model.DriveFile;
-import com.fde.google_drive_organizer.domain.model.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
@@ -36,7 +36,7 @@ class MoveDocumentToFolderUCTest {
 
     @Test
     void shouldExtractContentAndPrintSuggestedFolder() {
-        DriveFile driveFile = DriveFileTestFixture.aDriveFile()
+        DriveFileRef driveFileRef = DriveFileTestFixture.aDriveFileRef()
                 .withId("file-123")
                 .withName("salary-certificate-2025.pdf")
                 .build();
@@ -45,12 +45,12 @@ class MoveDocumentToFolderUCTest {
                 .withTextContent("Salary certificate text")
                 .build();
         when(extractDocumentContent.extract("file-123")).thenReturn(content);
-        when(suggestedTargetFolderRepository.suggestTargetFolder(driveFile, content)).thenReturn("Taxes/2025/02_Income");
+        when(suggestedTargetFolderRepository.suggestTargetFolder(driveFileRef, content)).thenReturn("Taxes/2025/02_Income");
 
-        moveDocumentToFolderUC.move(driveFile);
+        moveDocumentToFolderUC.move(driveFileRef);
 
         verify(extractDocumentContent).extract("file-123");
-        verify(suggestedTargetFolderRepository).suggestTargetFolder(driveFile, content);
+        verify(suggestedTargetFolderRepository).suggestTargetFolder(driveFileRef, content);
         verify(publisher).publish(new FileId("file-123"), ProgressStep.DONE, "Archive complete", new TargetFolder("Taxes/2025/02_Income"));
     }
 }
