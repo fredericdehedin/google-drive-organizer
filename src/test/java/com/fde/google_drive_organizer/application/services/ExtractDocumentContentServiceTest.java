@@ -1,9 +1,10 @@
 package com.fde.google_drive_organizer.application.services;
 
 import com.fde.google_drive_organizer.application.port.outbound.DocumentContentRepository;
-import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DocumentContentExtractionException;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContentTestFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,14 +27,14 @@ class ExtractDocumentContentServiceTest {
 
     @Test
     void shouldReturnDocumentContentWhenExtractionSucceeds() {
-        String fileId = "test-file-id";
-        DocumentContent expectedContent = DocumentContentTestFixture.aDocumentContent()
-                .withFileId(fileId)
+        DriveFileId fileId = new DriveFileId("test-file-id");
+        DriveFileDocumentContent expectedContent = DriveFileDocumentContentTestFixture.aDriveFileDocumentContent()
+                .withFileId(fileId.value())
                 .withTextContent("Extracted text content")
                 .build();
         when(documentContentRepository.extractContent(fileId)).thenReturn(expectedContent);
 
-        DocumentContent result = extractDocumentContentService.extract(fileId);
+        DriveFileDocumentContent result = extractDocumentContentService.extract(fileId);
 
         assertThat(result).isEqualTo(expectedContent);
         verify(documentContentRepository).extractContent(fileId);
@@ -41,9 +42,9 @@ class ExtractDocumentContentServiceTest {
 
     @Test
     void shouldThrowExceptionWhenExtractionFails() {
-        String fileId = "non-existent-file-id";
+        DriveFileId fileId = new DriveFileId("non-existent-file-id");
         when(documentContentRepository.extractContent(fileId))
-                .thenThrow(new DocumentContentExtractionException(fileId, "Failed to extract content"));
+                .thenThrow(new DocumentContentExtractionException(fileId.value(), "Failed to extract content"));
 
         assertThatThrownBy(() -> extractDocumentContentService.extract(fileId))
                 .isInstanceOf(DocumentContentExtractionException.class)

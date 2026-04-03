@@ -1,4 +1,7 @@
-package com.fde.google_drive_organizer.domain.drive_file;
+package com.fde.google_drive_organizer.domain.drive_file.ref;
+
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
+import com.fde.google_drive_organizer.domain.drive_file.DriveFileName;
 
 public record DriveFileRef(
         DriveFileId id,

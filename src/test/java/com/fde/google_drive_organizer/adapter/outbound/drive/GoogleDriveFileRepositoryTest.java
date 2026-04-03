@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
-import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveFile;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;

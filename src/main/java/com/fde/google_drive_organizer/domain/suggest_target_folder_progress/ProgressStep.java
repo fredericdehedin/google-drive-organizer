@@ -1,4 +1,4 @@
-package com.fde.google_drive_organizer.progress;
+package com.fde.google_drive_organizer.domain.suggest_target_folder_progress;
 
 public enum ProgressStep {
     STARTED,

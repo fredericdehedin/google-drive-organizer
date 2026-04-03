@@ -4,9 +4,6 @@ import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveFolderId;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveFolderName;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveTargetFolder;
-import com.fde.google_drive_organizer.progress.ProgressEvent;
-import com.fde.google_drive_organizer.progress.ProgressStep;
-import com.fde.google_drive_organizer.progress.ProgressSubscribers;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

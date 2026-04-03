@@ -1,12 +1,12 @@
 package com.fde.google_drive_organizer.adapter.outbound.drive;
 
 import com.fde.google_drive_organizer.application.port.outbound.FileRepository;
-import com.fde.google_drive_organizer.domain.drive_file.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveFile;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileName;
-import com.fde.google_drive_organizer.domain.drive_file.DriveIconLink;
-import com.fde.google_drive_organizer.domain.drive_file.DriveMimeType;
-import com.fde.google_drive_organizer.domain.drive_file.DriveThumbnailLink;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveIconLink;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveMimeType;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveThumbnailLink;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.beans.factory.ObjectProvider;

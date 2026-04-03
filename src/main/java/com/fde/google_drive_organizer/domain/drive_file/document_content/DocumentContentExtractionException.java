@@ -1,4 +1,4 @@
-package com.fde.google_drive_organizer.domain.exception;
+package com.fde.google_drive_organizer.domain.drive_file.document_content;
 
 public class DocumentContentExtractionException extends RuntimeException {
 

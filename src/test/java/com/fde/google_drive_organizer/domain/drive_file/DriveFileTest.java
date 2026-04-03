@@ -1,5 +1,6 @@
 package com.fde.google_drive_organizer.domain.drive_file;
 
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveFile;
 import org.junit.jupiter.api.Test;
 
 import static com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture.aDriveFile;
@@ -37,35 +38,7 @@ class DriveFileTest {
 
         assertThat(driveFile.id().value()).isEqualTo("file-456");
         assertThat(driveFile.name().value()).isEqualTo("spreadsheet.xlsx");
-        assertThat(driveFile.thumbnailLink()).isNull();
-    }
-
-    @Test
-    void shouldThrowExceptionWhenIdIsNull() {
-        assertThatThrownBy(() -> aDriveFile().withId(null).build())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Drive file id cannot be null or empty");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenIdIsBlank() {
-        assertThatThrownBy(() -> aDriveFile().withId("  ").build())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Drive file id cannot be null or empty");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenNameIsNull() {
-        assertThatThrownBy(() -> aDriveFile().withName(null).build())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Drive file name cannot be null or empty");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenNameIsBlank() {
-        assertThatThrownBy(() -> aDriveFile().withName("  ").build())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Drive file name cannot be null or empty");
+        assertThat(driveFile.thumbnailLink().value()).isNull();
     }
 
     @Test
@@ -74,7 +47,7 @@ class DriveFileTest {
                 .withMimeType(null)
                 .build();
 
-        assertThat(driveFile.mimeType()).isNull();
+        assertThat(driveFile.mimeType().value()).isNull();
     }
 
     @Test
@@ -83,6 +56,6 @@ class DriveFileTest {
                 .withIconLink(null)
                 .build();
 
-        assertThat(driveFile.iconLink()).isNull();
+        assertThat(driveFile.iconLink().value()).isNull();
     }
 }

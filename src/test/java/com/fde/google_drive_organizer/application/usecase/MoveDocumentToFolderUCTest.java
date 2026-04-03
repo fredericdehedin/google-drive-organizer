@@ -2,13 +2,13 @@ package com.fde.google_drive_organizer.application.usecase;
 
 import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentContent;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
-import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContentTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.ref.DriveFileRef;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveTargetFolderTestFixture;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.ProgressStep;
 import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
-import com.fde.google_drive_organizer.progress.ProgressStep;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,16 +39,16 @@ class SuggestTargetFolderUCTest {
                 .withId("file-123")
                 .withName("salary-certificate-2025.pdf")
                 .build();
-        DocumentContent content = DocumentContentTestFixture.aDocumentContent()
+        DriveFileDocumentContent content = DriveFileDocumentContentTestFixture.aDriveFileDocumentContent()
                 .withFileId("file-123")
                 .withTextContent("Salary certificate text")
                 .build();
-        when(extractDocumentContent.extract("file-123")).thenReturn(content);
+        when(extractDocumentContent.extract(driveFileRef.id())).thenReturn(content);
         when(suggestedTargetFolderRepository.suggestTargetFolder(driveFileRef, content)).thenReturn("Taxes/2025/02_Income");
 
         suggestTargetFolderUC.suggestTargetFolder(driveFileRef);
 
-        verify(extractDocumentContent).extract("file-123");
+        verify(extractDocumentContent).extract(driveFileRef.id());
         verify(suggestedTargetFolderRepository).suggestTargetFolder(driveFileRef, content);
         verify(publisher).publish(driveFileRef.id(), ProgressStep.DONE, "Archive complete", DriveTargetFolderTestFixture.aDriveTargetFolder()
                 .withName("Taxes/2025/02_Income")

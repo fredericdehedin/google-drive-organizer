@@ -3,10 +3,11 @@ package com.fde.google_drive_organizer.adapter.outbound.drive;
 import com.fde.google_drive_organizer.adapter.outbound.tika.DocumentParser;
 import com.fde.google_drive_organizer.application.port.outbound.DocumentContentRepository;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
-import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DocumentContentExtractionException;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContentText;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.ProgressStep;
 import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
-import com.fde.google_drive_organizer.progress.ProgressStep;
 import com.google.api.services.drive.Drive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,29 +41,28 @@ public class GoogleDriveDocumentContentRepository implements DocumentContentRepo
     }
 
     @Override
-    public DocumentContent extractContent(String fileId) {
-        DriveFileId driveFileId = new DriveFileId(fileId);
+    public DriveFileDocumentContent extractContent(DriveFileId fileId) {
         try {
-            publisher.publish(driveFileId, ProgressStep.DOWNLOADING, "Downloading file...");
+            publisher.publish(fileId, ProgressStep.DOWNLOADING, "Downloading file...");
             byte[] content;
-            try (InputStream inputStream = driveProvider.getObject().files().get(fileId).executeMediaAsInputStream()) {
+            try (InputStream inputStream = driveProvider.getObject().files().get(fileId.value()).executeMediaAsInputStream()) {
                 content = inputStream.readAllBytes();
             }
 
-            publisher.publish(driveFileId, ProgressStep.EXTRACTING_TEXT, "Extracting text...");
+            publisher.publish(fileId, ProgressStep.EXTRACTING_TEXT, "Extracting text...");
             String extractedText = textParser.parseToText(new ByteArrayInputStream(content));
 
             if (extractedText.isBlank()) {
                 log.info("Normal text extraction returned empty result for file {}, attempting OCR", fileId);
-                publisher.publish(driveFileId, ProgressStep.OCR, "Running OCR...");
+                publisher.publish(fileId, ProgressStep.OCR, "Running OCR...");
                 extractedText = ocrParser.parseToText(new ByteArrayInputStream(content));
             }
 
             log.info("Extracted content for fileId: {}, length: {}", fileId, extractedText.length());
-            return new DocumentContent(fileId, extractedText);
+            return new DriveFileDocumentContent(fileId, new DriveFileDocumentContentText(extractedText));
 
         } catch (IOException e) {
-            throw new DocumentContentExtractionException(fileId, "Failed to download content from Google Drive", e);
+            throw new DocumentContentExtractionException(fileId.value(), "Failed to download content from Google Drive", e);
         }
     }
 }

@@ -1,5 +1,10 @@
 package com.fde.google_drive_organizer.domain.drive_file;
 
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveFile;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveIconLink;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveMimeType;
+import com.fde.google_drive_organizer.domain.drive_file.file.DriveThumbnailLink;
+import com.fde.google_drive_organizer.domain.drive_file.ref.DriveFileRef;
 import net.datafaker.Faker;
 
 public class DriveFileTestFixture {
@@ -69,9 +74,9 @@ public class DriveFileTestFixture {
             return new DriveFile(
                     new DriveFileId(id),
                     new DriveFileName(name),
-                    mimeType == null ? null : new DriveMimeType(mimeType),
-                    iconLink == null ? null : new DriveIconLink(iconLink),
-                    thumbnailLink == null ? null : new DriveThumbnailLink(thumbnailLink)
+                    new DriveMimeType(mimeType),
+                    new DriveIconLink(iconLink),
+                    new DriveThumbnailLink(thumbnailLink)
             );
         }
     }

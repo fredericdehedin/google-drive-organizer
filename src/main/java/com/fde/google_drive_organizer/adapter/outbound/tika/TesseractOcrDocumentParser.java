@@ -1,6 +1,6 @@
 package com.fde.google_drive_organizer.adapter.outbound.tika;
 
-import com.fde.google_drive_organizer.domain.exception.DocumentContentExtractionException;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DocumentContentExtractionException;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.pdfbox.Loader;

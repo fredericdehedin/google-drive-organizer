@@ -1,10 +1,10 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
-import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.ref.DriveFileRef;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.ProgressStep;
 import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
-import com.fde.google_drive_organizer.progress.ProgressStep;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -28,12 +28,12 @@ public class SpringAiSuggestedTargetFolderRepository implements SuggestedTargetF
     }
 
     @Override
-    public String suggestTargetFolder(DriveFileRef driveFileRef, DocumentContent content) {
+    public String suggestTargetFolder(DriveFileRef driveFileRef, DriveFileDocumentContent content) {
         String folderStructure = loadResource(config.folderStructurePromptPath());
         String commandTemplate = loadResource(config.commandPromptPath());
         String prompt = commandTemplate
                 .replace("{file}", driveFileRef.name().value())
-                .replace("{content}", content.textContent())
+                .replace("{content}", content.textContent().value())
                 .replace("{folder-structure}", folderStructure);
         publisher.publish(driveFileRef.id(), ProgressStep.ANALYZING, "Analyzing with AI...");
         return chatModel.call(prompt).trim();

@@ -4,13 +4,13 @@ import com.fde.google_drive_organizer.application.port.inbound.ExtractDocumentCo
 import com.fde.google_drive_organizer.application.port.inbound.SuggestTargetFolderService;
 import com.fde.google_drive_organizer.application.port.outbound.SuggestedTargetFolderRepository;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileId;
-import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.ref.DriveFileRef;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveFolderId;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveFolderName;
 import com.fde.google_drive_organizer.domain.drive_folder.DriveTargetFolder;
+import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.ProgressStep;
 import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
-import com.fde.google_drive_organizer.progress.ProgressStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class SuggestTargetFolderUC implements SuggestTargetFolderService {
     public void suggestTargetFolder(DriveFileRef driveFileRef) {
         DriveFileId driveFileId = driveFileRef.id();
         try {
-            DocumentContent content = extractDocumentContent.extract(driveFileId.value());
+            DriveFileDocumentContent content = extractDocumentContent.extract(driveFileId);
             String suggestedFolder = suggestedTargetFolderRepository.suggestTargetFolder(driveFileRef, content);
             LOGGER.info("Suggested folder for '{}': {}", driveFileRef.name().value(), suggestedFolder);
             publisher.publish(driveFileId, ProgressStep.DONE, "Archive complete", new DriveTargetFolder(new DriveFolderId(null), new DriveFolderName(suggestedFolder)));

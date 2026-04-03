@@ -1,9 +1,9 @@
 package com.fde.google_drive_organizer.adapter.outbound.ai;
 
-import com.fde.google_drive_organizer.domain.drive_file.DriveFileRef;
-import com.fde.google_drive_organizer.domain.model.DocumentContent;
-import com.fde.google_drive_organizer.domain.model.DocumentContentTestFixture;
 import com.fde.google_drive_organizer.domain.drive_file.DriveFileTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContent;
+import com.fde.google_drive_organizer.domain.drive_file.document_content.DriveFileDocumentContentTestFixture;
+import com.fde.google_drive_organizer.domain.drive_file.ref.DriveFileRef;
 import com.fde.google_drive_organizer.domain.suggest_target_folder_progress.SuggestTargetFolderProgressPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
                 .withId("file-123")
                 .withName("salary-certificate-2025.pdf")
                 .build();
-        DocumentContent content = DocumentContentTestFixture.aDocumentContent()
+        DriveFileDocumentContent content = DriveFileDocumentContentTestFixture.aDriveFileDocumentContent()
                 .withFileId("file-123")
                 .withTextContent("Salary certificate for year 2025")
                 .build();
@@ -68,7 +68,7 @@ class SpringAiSuggestedTargetFolderRepositoryTest {
                 .withId("file-456")
                 .withName("bank-statement.pdf")
                 .build();
-        DocumentContent content = DocumentContentTestFixture.aDocumentContent()
+        DriveFileDocumentContent content = DriveFileDocumentContentTestFixture.aDriveFileDocumentContent()
                 .withFileId("file-456")
                 .withTextContent("Bank account statement December 2025")
                 .build();
