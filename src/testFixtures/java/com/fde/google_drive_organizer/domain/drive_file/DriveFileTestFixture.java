@@ -1,7 +1,10 @@
 package com.fde.google_drive_organizer.domain.drive_file;
 
-//TODO: move to testFixtures
+import net.datafaker.Faker;
+
 public class DriveFileTestFixture {
+
+    private static final Faker FAKER = new Faker();
 
     public static DriveFileRefBuilder aDriveFileRef() {
         return new DriveFileRefBuilder();
@@ -12,8 +15,8 @@ public class DriveFileTestFixture {
     }
 
     public static class DriveFileRefBuilder {
-        private String id = "default-id";
-        private String name = "default-file.txt";
+        private String id = FAKER.internet().uuid();
+        private String name = FAKER.file().fileName();
 
         public DriveFileRefBuilder withId(String id) {
             this.id = id;
@@ -31,8 +34,8 @@ public class DriveFileTestFixture {
     }
 
     public static class DriveFileBuilder {
-        private String id = "default-id";
-        private String name = "default-file.txt";
+        private String id = FAKER.internet().uuid();
+        private String name = FAKER.file().fileName();
         private String mimeType = "application/octet-stream";
         private String iconLink = "https://drive-thirdparty.googleusercontent.com/16/type/application/octet-stream";
         private String thumbnailLink = null;

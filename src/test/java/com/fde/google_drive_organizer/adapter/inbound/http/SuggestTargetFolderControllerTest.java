@@ -13,19 +13,19 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ArchiveControllerTest {
+class SuggestTargetFolderControllerTest {
 
     private final MoveDocumentToFolder moveDocumentToFolder = mock(MoveDocumentToFolder.class);
     private final ProgressEventPublisher publisher = mock(ProgressEventPublisher.class);
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new ArchiveController(moveDocumentToFolder, publisher))
+            .standaloneSetup(new SuggestTargetFolderController(moveDocumentToFolder, publisher))
             .build();
 
     @Test
     @WithMockUser
     void shouldReturnOkWhenArchiveSucceeds() throws Exception {
-        mockMvc.perform(get("/api/files/{fileId}/archive", "test-file-id")
+        mockMvc.perform(get("/api/files/{fileId}/suggest-target-folder", "test-file-id")
                         .param("fileName", "invoice.pdf"))
                 .andExpect(status().isOk());
 

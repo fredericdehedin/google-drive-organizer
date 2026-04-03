@@ -1,15 +1,18 @@
 package com.fde.google_drive_organizer.domain.model;
 
-//TODO: move to testFixtures
+import net.datafaker.Faker;
+
 public class DocumentContentTestFixture {
+
+    private static final Faker FAKER = new Faker();
 
     public static DocumentContentBuilder aDocumentContent() {
         return new DocumentContentBuilder();
     }
 
     public static class DocumentContentBuilder {
-        private String fileId = "default-file-id";
-        private String textContent = "Default extracted text content";
+        private String fileId = FAKER.internet().uuid();
+        private String textContent = FAKER.lorem().paragraph();
 
         public DocumentContentBuilder withFileId(String fileId) {
             this.fileId = fileId;

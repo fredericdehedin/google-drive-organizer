@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class ArchiveProgressControllerTest {
+class SuggestTargetFolderProgressControllerTest {
 
     // Completes the emitter immediately so async dispatch can finish in the test.
     private final ProgressEventPublisher publisher = new ProgressEventPublisher() {
@@ -26,12 +26,12 @@ class ArchiveProgressControllerTest {
     };
 
     private final MockMvc mockMvc = MockMvcBuilders
-            .standaloneSetup(new ArchiveController(mock(MoveDocumentToFolder.class), publisher))
+            .standaloneSetup(new SuggestTargetFolderController(mock(MoveDocumentToFolder.class), publisher))
             .build();
 
     @Test
     void shouldReturnTextEventStreamForProgressEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(get("/api/files/{fileId}/archive/progress", "test-file-id"))
+        MvcResult result = mockMvc.perform(get("/api/files/{fileId}/suggest-target-folder/progress", "test-file-id"))
                 .andExpect(request().asyncStarted())
                 .andReturn();
 

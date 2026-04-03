@@ -1,4 +1,4 @@
-function archiveProgress() {
+function suggestTargetFolderProgress() {
     return {
         isOpen: false,
         steps: [],
@@ -16,10 +16,10 @@ function archiveProgress() {
             this.targetFolder = null;
         },
 
-        startArchive(fileId, fileName) {
+        startSuggestTargetFolder(fileId, fileName) {
             this.steps = [];
             this.isOpen = true;
-            this.eventSource = new EventSource('/api/files/' + fileId + '/archive/progress');
+            this.eventSource = new EventSource('/api/files/' + fileId + '/suggest-target-folder/progress');
 
             this.eventSource.addEventListener('progress', (e) => {
                 const data = JSON.parse(e.data);
@@ -38,9 +38,9 @@ function archiveProgress() {
             });
 
             this.eventSource.onopen = () => {
-                fetch('/api/files/' + fileId + '/archive?fileName=' + encodeURIComponent(fileName))
+                fetch('/api/files/' + fileId + '/suggest-target-folder?fileName=' + encodeURIComponent(fileName))
                     .then(response => {
-                        if (!response.ok) this._handleError('Archive request failed');
+                        if (!response.ok) this._handleError('Suggest target folder request failed');
                     })
                     .catch(() => this._handleError('Network error'));
             };

@@ -1,5 +1,6 @@
 [versions]
 spring-boot = "4.0.5"
+datafaker = "2.5.4"
 htmx-webjars = "2.0.8"
 google-api-client = "2.9.0"
 google-oauth-client = "1.39.0"
@@ -31,3 +32,4 @@ tika-core = { group = "org.apache.tika", name = "tika-core", version.ref = "tika
 tika-parsers-standard = { group = "org.apache.tika", name = "tika-parsers-standard-package", version.ref = "tika" }
 spring-ai-bom = { group = "org.springframework.ai", name = "spring-ai-bom", version.ref = "spring-ai" }
 spring-ai-openai = { group = "org.springframework.ai", name = "spring-ai-openai" }
+datafaker = { group = "net.datafaker", name = "datafaker", version.ref = "datafaker" }

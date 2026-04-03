@@ -18,18 +18,18 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 
 @RestController
-public class ArchiveController {
+public class SuggestTargetFolderController {
 
     private final MoveDocumentToFolder moveDocumentToFolder;
     private final ProgressEventPublisher publisher;
 
-    public ArchiveController(MoveDocumentToFolder moveDocumentToFolder, ProgressEventPublisher publisher) {
+    public SuggestTargetFolderController(MoveDocumentToFolder moveDocumentToFolder, ProgressEventPublisher publisher) {
         this.moveDocumentToFolder = moveDocumentToFolder;
         this.publisher = publisher;
     }
 
-    @GetMapping("/api/files/{fileId}/archive")
-    public ResponseEntity<Void> archiveFile(
+    @GetMapping("/api/files/{fileId}/suggest-target-folder")
+    public ResponseEntity<Void> startSuggestTargetFolder(
             @PathVariable String fileId,
             @RequestParam String fileName
     ) {
@@ -39,8 +39,8 @@ public class ArchiveController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/api/files/{fileId}/archive/progress", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter archiveProgress(@PathVariable String fileId) throws IOException {
+    @GetMapping(value = "/api/files/{fileId}/suggest-target-folder/progress", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter suggestTargetFolderProgress(@PathVariable String fileId) throws IOException {
         //TODO: move out of the controller..
         SseEmitter emitter = new SseEmitter(5 * 60 * 1000L);
         emitter.send(SseEmitter.event().comment("connected"));

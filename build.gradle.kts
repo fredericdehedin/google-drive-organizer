@@ -1,5 +1,6 @@
 plugins {
 	java
+	`java-test-fixtures`
 	alias(libs.plugins.spring.boot)
 	jacoco
 }
@@ -42,6 +43,8 @@ dependencies {
     implementation(libs.tika.core)
     implementation(libs.tika.parsers.standard)
     implementation(libs.spring.ai.openai)
+
+    testFixturesImplementation(libs.datafaker)
 
     testImplementation(platform(libs.spring.boot.bom))
     testImplementation(libs.spring.boot.starter.test)

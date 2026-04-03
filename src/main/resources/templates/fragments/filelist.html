@@ -5,12 +5,12 @@
     <div th:if="${driveFiles != null and !driveFiles.isEmpty()}">
         <div class="file-grid">
             <article class="file-card" th:each="file : ${driveFiles}"
-                     x-data="archiveProgress()"
+                     x-data="suggestTargetFolderProgress()"
                      th:data-file-id="${file.id()}"
                      th:data-file-name="${file.name()}">
                 <div x-show="isOpen" x-cloak class="archive-overlay" x-transition>
                     <article class="archive-overlay-panel">
-                        <header>Archiving file...</header>
+                        <header>Suggesting target folder...</header>
                         <ul class="archive-step-list">
                             <template x-for="s in steps" :key="s.step">
                                 <li class="archive-step-row">
@@ -52,8 +52,8 @@
                 <footer class="file-card-footer">
                     <button type="button" class="archive-button"
                             :disabled="isOpen && !isTerminal"
-                            @click="startArchive($el.closest('[data-file-id]').dataset.fileId, $el.closest('[data-file-name]').dataset.fileName)">
-                        Archive
+                            @click="startSuggestTargetFolder($el.closest('[data-file-id]').dataset.fileId, $el.closest('[data-file-name]').dataset.fileName)">
+                        Suggest target folder
                     </button>
                 </footer>
             </article>
@@ -62,7 +62,7 @@
     <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
         <p>No files found in the configured folder.</p>
     </div>
-    <script th:src="@{/js/archive-progress.js}"></script>
+    <script th:src="@{/js/suggest-target-folder-progress.js}"></script>
 </div>
 </body>
 </html>
