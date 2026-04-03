@@ -46,6 +46,15 @@ class ProgressSubscribers {
         String message = event.message()
                 .replace("\\", "\\\\")
                 .replace("\"", "\\\"");
-        return "{\"step\":\"" + event.step().name() + "\",\"message\":\"" + message + "\"}";
+        StringBuilder json = new StringBuilder("{\"step\":\"").append(event.step().name())
+                .append("\",\"message\":\"").append(message).append("\"");
+        if (event.targetFolder().value() != null) {
+            String folder = event.targetFolder().value()
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"");
+            json.append(",\"targetFolder\":\"").append(folder).append("\"");
+        }
+        json.append("}");
+        return json.toString();
     }
 }

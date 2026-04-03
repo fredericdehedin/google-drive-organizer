@@ -24,6 +24,8 @@
                                 </li>
                             </template>
                         </ul>
+                        <p x-show="targetFolder" class="archive-target-folder"
+                           x-text="'Evaluated target folder: ' + targetFolder"></p>
                         <footer x-show="isTerminal">
                             <button type="button" class="secondary" @click="closeOverlay()">Close</button>
                         </footer>

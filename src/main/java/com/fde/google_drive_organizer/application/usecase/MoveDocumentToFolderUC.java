@@ -8,6 +8,7 @@ import com.fde.google_drive_organizer.domain.model.DriveFile;
 import com.fde.google_drive_organizer.progress.FileId;
 import com.fde.google_drive_organizer.progress.ProgressEventPublisher;
 import com.fde.google_drive_organizer.progress.ProgressStep;
+import com.fde.google_drive_organizer.progress.TargetFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class MoveDocumentToFolderUC implements MoveDocumentToFolder {
             DocumentContent content = extractDocumentContent.extract(driveFile.id());
             String suggestedFolder = suggestedTargetFolderRepository.suggestTargetFolder(driveFile, content);
             LOGGER.info("Suggested folder for '{}': {}", driveFile.name(), suggestedFolder);
-            publisher.publish(fileId, ProgressStep.DONE, "Archive complete");
+            publisher.publish(fileId, ProgressStep.DONE, "Archive complete", new TargetFolder(suggestedFolder));
         } catch (Exception e) {
             publisher.publish(fileId, ProgressStep.FAILED, "Archive failed");
             throw e;

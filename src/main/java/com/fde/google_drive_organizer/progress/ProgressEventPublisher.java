@@ -20,9 +20,13 @@ public class ProgressEventPublisher {
     }
 
     public void publish(FileId fileId, ProgressStep step, String message) {
+        publish(fileId, step, message, new TargetFolder(null));
+    }
+
+    public void publish(FileId fileId, ProgressStep step, String message, TargetFolder targetFolder) {
         ProgressSubscribers subs = subscribers.get(fileId);
         if (subs != null) {
-            subs.broadcast(new ProgressEvent(fileId, step, message, Instant.now()));
+            subs.broadcast(new ProgressEvent(fileId, step, message, targetFolder, Instant.now()));
         }
     }
 

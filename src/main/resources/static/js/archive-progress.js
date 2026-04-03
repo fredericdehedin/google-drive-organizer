@@ -2,6 +2,7 @@ function archiveProgress() {
     return {
         isOpen: false,
         steps: [],
+        targetFolder: null,
         eventSource: null,
 
         get isTerminal() {
@@ -12,6 +13,7 @@ function archiveProgress() {
         closeOverlay() {
             this.isOpen = false;
             this.steps = [];
+            this.targetFolder = null;
         },
 
         startArchive(fileId, fileName) {
@@ -29,6 +31,7 @@ function archiveProgress() {
                     this.steps.push({ step: data.step, message: data.message, status: 'running' });
                 }
                 if (data.step === 'DONE' || data.step === 'FAILED') {
+                    if (data.targetFolder) this.targetFolder = data.targetFolder;
                     this.eventSource.close();
                     if (data.step === 'DONE') setTimeout(() => this.closeOverlay(), 2000);
                 }

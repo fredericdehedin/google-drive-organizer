@@ -6,5 +6,6 @@ public record ProgressEvent(
         FileId fileId,
         ProgressStep step,
         String message,
+        TargetFolder targetFolder,
         Instant timestamp
 ) {}

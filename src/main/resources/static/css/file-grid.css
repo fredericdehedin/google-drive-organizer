@@ -165,6 +165,15 @@
     white-space: nowrap;
 }
 
+.archive-target-folder {
+    margin: 0.5rem 0 0;
+    font-size: 0.8rem;
+    color: var(--pico-muted-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .file-grid {
