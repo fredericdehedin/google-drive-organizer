@@ -27,6 +27,11 @@
                         <p x-show="targetFolder" class="archive-target-folder"
                            x-text="'Evaluated target folder: ' + targetFolder"></p>
                         <footer x-show="isTerminal">
+                            <button type="button"
+                                    x-show="targetFolder && steps[steps.length - 1]?.status === 'done'"
+                                    x-text="'Move to \'' + targetFolder + '\''"
+                                    @click="moveFile(fileId, targetFolder)">
+                            </button>
                             <button type="button" class="secondary" @click="closeOverlay()">Close</button>
                         </footer>
                     </article>
@@ -62,6 +67,7 @@
     <div th:if="${driveFiles == null or driveFiles.isEmpty()}">
         <p>No files found in the configured folder.</p>
     </div>
+    <script th:src="@{/js/move-file.js}"></script>
     <script th:src="@{/js/suggest-target-folder-progress.js}"></script>
 </div>
 </body>
